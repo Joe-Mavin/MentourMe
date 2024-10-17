@@ -4,6 +4,8 @@ import styles from "../assets/styles/signUp.module.css";
 
 const SignUpPage = () => {
    const [formData,setformData] = useState({name:"",email:"",password:"",phone:""})
+   const [error,Seterror] = useState('')
+   const [success,Setsuccess] = useState('')
 
    const HandleChange = (e) => {
     const {name,value} = e.target
@@ -12,7 +14,25 @@ const SignUpPage = () => {
    ///console.log(formData)
    const HandleSubmit = async (e) => {
     e.preventDefault()
-  
+    Seterror('')//Reset previous errors
+    Setsuccess('')//Reset previous success
+    try {
+      const response = await fetch('v1/api/register',{
+        method:'POST',
+        headers:{
+          content:"application/json"
+        },
+        body:JSON.stringify(formData)
+      })
+      if (!response.ok){
+        throw new Error("Failed to create an account. Please try again.")
+      }
+      const data = await response.json()
+      Setsuccess("Account created successfully!")
+      console.log(data)
+    } catch (error) {
+      Seterror(error.message)
+    }
   }
   return (
     <div className={styles.signUpContainer}>
