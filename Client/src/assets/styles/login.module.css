@@ -1,0 +1,79 @@
+:root {
+    --primary-color: #002855; /* Dark Blue */
+    --secondary-color: #b4975a; /* Gold */
+    --background-color: #FFFFFF; /* White */
+    --accent-color: #F5F5F5; /* Light Grey */
+  }
+  
+  .loginContainer {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: var(--background-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+  }
+  
+  .loginForm {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .inputGroup {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .inputIcon {
+    padding: 10px;
+    color: var(--primary-color);
+    background-color: var(--accent-color);
+  }
+  
+  .input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+  }
+  
+  .btn {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  .footerText {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .footerText a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  .footerText a:hover {
+    text-decoration: underline;
+  }
+  
