@@ -1,8 +1,18 @@
-import React from "react";
+import React,{useState} from "react";
 import { FaUser, FaEnvelope, FaLock, FaPhoneAlt } from "react-icons/fa";
 import styles from "../assets/styles/signUp.module.css";
 
 const SignUpPage = () => {
+   const [formData,setformData] = useState({name:"",email:"",password:"",phone:""})
+
+   const HandleChange = (e) => {
+    const {name,value} = e.target
+    setformData({...formData,[name]:value})
+   }
+   ///console.log(formData)
+   const HandleSubmit = () => {
+    
+   }
   return (
     <div className={styles.signUpContainer}>
       <h1 className={styles.title}>Create Your Account</h1>
@@ -14,6 +24,8 @@ const SignUpPage = () => {
             placeholder="Full Name"
             required
             className={styles.input}
+            name = "name"
+            onChange={HandleChange}
           />
         </div>
         <div className={styles.inputGroup}>
@@ -23,6 +35,8 @@ const SignUpPage = () => {
             placeholder="Email Address"
             required
             className={styles.input}
+            name = "email"
+            onChange={HandleChange}
           />
         </div>
         <div className={styles.inputGroup}>
@@ -32,6 +46,8 @@ const SignUpPage = () => {
             placeholder="Password"
             required
             className={styles.input}
+            name = "password"
+            onChange={HandleChange}
           />
         </div>
         <div className={styles.inputGroup}>
@@ -41,6 +57,8 @@ const SignUpPage = () => {
             placeholder="Phone Number"
             required
             className={styles.input}
+            name = "phone"
+            onChange={HandleChange}
           />
         </div>
         <button type="submit" className={styles.btn}>
