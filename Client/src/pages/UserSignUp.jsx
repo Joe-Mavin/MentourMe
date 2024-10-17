@@ -10,9 +10,10 @@ const SignUpPage = () => {
     setformData({...formData,[name]:value})
    }
    ///console.log(formData)
-   const HandleSubmit = () => {
-    
-   }
+   const HandleSubmit = async (e) => {
+    e.preventDefault()
+  
+  }
   return (
     <div className={styles.signUpContainer}>
       <h1 className={styles.title}>Create Your Account</h1>
