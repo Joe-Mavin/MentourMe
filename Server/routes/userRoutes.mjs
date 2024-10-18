@@ -1,14 +1,10 @@
-import express from "express"
+import { Router } from "express";
+import { registerUser } from '../controllers/registerUser.mjs';
 
-//import your controllers
-import userController from '../controllers/registerUser.mjs'
+const userRouter = Router();
 
-const router = express.Router()
+// Define the user registration route
+userRouter.route('/v1/api/register')
+          .post(registerUser);
 
-//decalre your routes
-router.route('/v1/api/register')
-      .post(userController.registerUser)
-      .post()
-
-
-export default router    
+export default userRouter;

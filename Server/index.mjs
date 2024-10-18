@@ -1,16 +1,22 @@
 import express from "express";
-import router from '../src/routes/index.mjs'
-// import userRouter from '../src/routes/userRoutes.mjs'
+import bodyParser from "body-parser";
+import mainRouter from "./routes/index.mjs";
+
 const app = express();
-app.use(express.json());
+const PORT = 5000;
 
-//use our router
-app.use(router)
+// Middleware
+app.use(bodyParser.json());
 
-//mount the users router
-app.use('/v1/api/register', userRouter)
+// Use the main router
+app.use(mainRouter);
 
-const PORT = process.env.PORT || 3000;
+// Default route
+app.get('/', (req, res) => {
+  res.send('Welcome to the User Registration API');
+});
+
+// Start the server
 app.listen(PORT, () => {
-  console.log(`server running at port: ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
