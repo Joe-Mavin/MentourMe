@@ -4,7 +4,7 @@ import { registerUser } from '../controllers/registerUser.mjs';
 const userRouter = Router();
 
 // Define the user registration route
-userRouter.route('/v1/api/register')
+userRouter.route('/api/v1/register')
           .post(registerUser);
 
 export default userRouter;

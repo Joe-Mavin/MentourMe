@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "Joseph Paul Onyango",
+    "email": "mavinodundo@gmail.com",
+    "password": "1234",
+    "phone": "0707553244"
+  },
+  {
+    "id": 2,
+    "name": "Collins Makuge",
+    "email": "collins@gmail.com",
+    "password": "1234",
+    "phone": "0732456789"
+  }
+]

@@ -1,6 +1,6 @@
 import {Router} from "express"
 //custom index page to export all routers
-import userRouter from './usersRouter.mjs'
+import userRouter from './userRoutes.mjs'
 
 const router = Router()
 

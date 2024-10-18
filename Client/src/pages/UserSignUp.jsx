@@ -1,43 +1,47 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { FaUser, FaEnvelope, FaLock, FaPhoneAlt } from "react-icons/fa";
 import styles from "../assets/styles/signUp.module.css";
 
 const SignUpPage = () => {
-   const [formData,setformData] = useState({name:"",email:"",password:"",phone:""})
-   const [error,Seterror] = useState('')
-   const [success,Setsuccess] = useState('')
+  const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-   const HandleChange = (e) => {
-    const {name,value} = e.target
-    setformData({...formData,[name]:value})
-   }
-   ///console.log(formData)
-   const HandleSubmit = async (e) => {
-    e.preventDefault()
-    Seterror('')//Reset previous errors
-    Setsuccess('')//Reset previous success
+  const HandleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+    setError(""); // Reset previous errors
+    setSuccess(""); // Reset previous success
+
     try {
-      const response = await fetch('v1/api/register',{
-        method:'POST',
-        headers:{
-          content:"application/json"
+      const response = await fetch("http://localhost:5000/api/v1/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body:JSON.stringify(formData)
-      })
-      if (!response.ok){
-        throw new Error("Failed to create an account. Please try again.")
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create an account. Please try again.");
       }
-      const data = await response.json()
-      Setsuccess("Account created successfully!")
-      console.log(data)
+
+      const data = await response.json();
+      setSuccess("Account created successfully!");
+      console.log(data);
     } catch (error) {
-      Seterror(error.message)
+      setError(error.message);
     }
-  }
+  };
+
   return (
     <div className={styles.signUpContainer}>
       <h1 className={styles.title}>Create Your Account</h1>
-      <form className={styles.signUpForm}>
+      <form className={styles.signUpForm} onSubmit={HandleSubmit}>
         <div className={styles.inputGroup}>
           <FaUser className={styles.inputIcon} />
           <input
@@ -45,7 +49,8 @@ const SignUpPage = () => {
             placeholder="Full Name"
             required
             className={styles.input}
-            name = "name"
+            name="name"
+            value={formData.name}
             onChange={HandleChange}
           />
         </div>
@@ -56,7 +61,8 @@ const SignUpPage = () => {
             placeholder="Email Address"
             required
             className={styles.input}
-            name = "email"
+            name="email"
+            value={formData.email}
             onChange={HandleChange}
           />
         </div>
@@ -67,7 +73,8 @@ const SignUpPage = () => {
             placeholder="Password"
             required
             className={styles.input}
-            name = "password"
+            name="password"
+            value={formData.password}
             onChange={HandleChange}
           />
         </div>
@@ -78,7 +85,8 @@ const SignUpPage = () => {
             placeholder="Phone Number"
             required
             className={styles.input}
-            name = "phone"
+            name="phone"
+            value={formData.phone}
             onChange={HandleChange}
           />
         </div>
@@ -86,6 +94,8 @@ const SignUpPage = () => {
           Sign Up
         </button>
       </form>
+      {error && <p className={styles.errorText}>{error}</p>}
+      {success && <p className={styles.successText}>{success}</p>}
       <p className={styles.footerText}>
         Already have an account? <a href="/login">Log In</a>
       </p>
