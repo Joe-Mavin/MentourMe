@@ -1,6 +1,6 @@
 import express from "express";
-// import router from '../src/routes/index.mjs'
-import userRouter from '../src/routes/userRoutes.mjs'
+import router from '../src/routes/index.mjs'
+// import userRouter from '../src/routes/userRoutes.mjs'
 const app = express();
 app.use(express.json());
 
@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(router)
 
 //mount the users router
-app.use('/api/v1/users', userRouter)
+app.use('/v1/api/register', userRouter)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
