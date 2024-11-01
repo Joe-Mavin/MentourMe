@@ -12,5 +12,19 @@
     "email": "collins@gmail.com",
     "password": "1234",
     "phone": "0732456789"
+  },
+  {
+    "id": 3,
+    "name": "Joseph Paul Onyango",
+    "email": "owfuwegjesdluzgvym@tcwlm.com",
+    "password": "12345",
+    "phone": "0707553244"
+  },
+  {
+    "id": 4,
+    "name": "New ",
+    "email": "new@new.com",
+    "password": "1234",
+    "phone": "07111111111"
   }
 ]

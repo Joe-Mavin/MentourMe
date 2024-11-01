@@ -30,7 +30,7 @@ const saveUsers = async (users) => {
 
 // Exported function to register a new user
 export const registerUser = async (req, res) => {
-  const { name, email, password, phone } = req.body;
+  const {body:{name, email, password, phone }} = req;
 
   // Basic validation
   if (!name || !email || !password || !phone) {
