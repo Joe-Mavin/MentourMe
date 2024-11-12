@@ -1,31 +1,30 @@
-import express from "express";
+import express from "express"
+import authRoutes from './routes/authRoutes.mjs'
 import bodyParser from "body-parser";
-import mainRouter from "./routes/index.mjs";
 import cors from "cors";
 
+
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000
 
 // Middleware
 app.use(
-  cors({
-    origin: "http://localhost:5173", // Allow your frontend's origin
-    methods: ["GET", "POST"], // Allow specific HTTP methods
-    credentials: true, // If you want to allow cookies or authorization headers
-  })
-);
+    cors({
+      origin: "http://localhost:5173", // Allow your frontend's origin
+      methods: ["GET", "POST"], // Allow specific HTTP methods
+      credentials: true, // If you want to allow cookies or authorization headers
+    })
+  );
 
+app.use(express.json());
 app.use(bodyParser.json());
 
-// Use the main router
-app.use(mainRouter);
+// Routes
+app.use('/auth', authRoutes);
 
-// Default route
-app.get("/", (req, res) => {
-  res.send("Welcome to the User Registration API");
-});
-
-// Start the server
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
+
+

@@ -76,4 +76,10 @@
   .footerText a:hover {
     text-decoration: underline;
   }
+  .errorMessage {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  
   

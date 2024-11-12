@@ -1,15 +1,33 @@
 import React, { useState } from "react";
-import { FaUser, FaEnvelope, FaLock, FaPhoneAlt } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaPhoneAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import styles from "../assets/styles/signUp.module.css";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const HandleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const validateInput = () => {
+    if (!formData.name.trim()) {
+      return "Name is required.";
+    }
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      return "Please provide a valid email address.";
+    }
+    if (!/^\+[1-9]\d{1,14}$/.test(formData.phone)) {
+      return "Please provide a valid phone number in E.164 format (e.g., +1234567890).";
+    }
+    if (formData.password.length < 6) {
+      return "Password must be at least 6 characters.";
+    }
+    return null;
   };
 
   const HandleSubmit = async (e) => {
@@ -17,8 +35,15 @@ const SignUpPage = () => {
     setError(""); // Reset previous errors
     setSuccess(""); // Reset previous success
 
+    const validationError = validateInput();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/v1/register", {
+      const response = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,14 +52,22 @@ const SignUpPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create an account. Please try again.");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create an account. Please try again.");
       }
 
       const data = await response.json();
       setSuccess("Account created successfully!");
       console.log(data);
+
+      // Redirect to login after success
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
     } catch (error) {
       setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,15 +101,25 @@ const SignUpPage = () => {
         </div>
         <div className={styles.inputGroup}>
           <FaLock className={styles.inputIcon} />
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            className={styles.input}
-            name="password"
-            value={formData.password}
-            onChange={HandleChange}
-          />
+          <div className={styles.passwordWrapper}>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              required
+              className={styles.input}
+              name="password"
+              value={formData.password}
+              onChange={HandleChange}
+            />
+            <span
+              className={styles.eyeIcon}
+              onClick={() => setShowPassword(!showPassword)}
+              role="button"
+              aria-label="Toggle password visibility"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
         </div>
         <div className={styles.inputGroup}>
           <FaPhoneAlt className={styles.inputIcon} />
@@ -90,8 +133,8 @@ const SignUpPage = () => {
             onChange={HandleChange}
           />
         </div>
-        <button type="submit" className={styles.btn}>
-          Sign Up
+        <button type="submit" className={styles.btn} disabled={isLoading}>
+          {isLoading ? "Creating..." : "Sign Up"}
         </button>
       </form>
       {error && <p className={styles.errorText}>{error}</p>}
