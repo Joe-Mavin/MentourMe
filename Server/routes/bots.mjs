@@ -3,7 +3,7 @@ import { getAIResponse } from "../services/openaiService.mjs";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/bot/responses", async (req, res) => {
   const { message } = req.body;
 
   try {
