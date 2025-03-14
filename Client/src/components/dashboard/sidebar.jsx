@@ -59,7 +59,7 @@ const Sidebar = () => {
       {/* Sidebar Items */}
       <SidebarItem icon={<HouseIcon />} label="Dashboard" />
       <SidebarItem icon={<ConnectWithoutContactIcon />} label="Connect" />
-      <SidebarItem icon={<SmartToyIcon />} label="Bot" />
+      <SidebarItem icon={<SmartToyIcon />} label="Bot" route="/onboard"/>
       <SidebarItem icon={<PersonIcon />} label="Profile" />
       <SidebarItem icon={<SettingsIcon />} label="Settings" />
       <SidebarItem icon={<ContactEmergencyIcon />} label="Mentor" />

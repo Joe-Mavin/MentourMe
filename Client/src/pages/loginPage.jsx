@@ -31,8 +31,17 @@ const LoginPage = () => {
         return;
       }
 
-      // Navigate to dashboard if authentication is successful
-      navigate("/dashboard");
+      const responseData = await response.json();
+      if (responseData.token) {
+        // Store the token in localStorage
+        localStorage.setItem("token", responseData.token);
+
+        // After successful login, check if the token is available
+        const token = localStorage.getItem("token");
+        if (token) {
+          navigate("/dashboard"); // Redirect to dashboard if token is found
+        }
+      }
     } catch (error) {
       setErrorMessage("An error occurred. Please try again.");
       console.error(error);
