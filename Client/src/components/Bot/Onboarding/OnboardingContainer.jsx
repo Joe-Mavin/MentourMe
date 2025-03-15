@@ -4,7 +4,7 @@ import Step2Goals from "./Step2Goals";
 import Step3Confidence from "./Step3Confidence";
 import Step4TimeAvailability from "./Step4TimeAvailability";
 import StepAddictionDetails from "./StepAddictionDetails"; // Import new step
-import StepSocialLife from "./StepSocialLife"; // Import the Social Life step
+import StepSocialLife from "./stepSocialLife"; // Import the Social Life step
 import Summary from "./Summary";
 
 const OnboardingContainer = ({ onComplete }) => {
