@@ -1,5 +1,6 @@
 import express from "express"
 import authRoutes from './routes/authRoutes.mjs'
+import botRoutes from './routes/botRoutes.mjs'
 import bodyParser from "body-parser";
 import cors from "cors";
 
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/auth', authRoutes);
+app.use("/api", botRoutes);
 
 // Start server
 app.listen(PORT, () => {

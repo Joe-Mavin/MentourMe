@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,11 +6,50 @@ datasource db {
   provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id       Int      @id @default(autoincrement())
-  name String @unique
-  email    String   @unique
-  password String
-  phone    String
-  createdAt DateTime @default(now())
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  email           String           @unique
+  password        String
+  phone           String
+  createdAt       DateTime         @default(now())
+
+  // Reverse relation: A user can have multiple bot interactions
+  botInteractions BotInteraction[]
+}
+
+model BotInteraction {
+  id                    Int      @id @default(autoincrement())
+  userId                Int
+  confidenceLevels      String   // Changed from Json to String
+  timeAvailability      String
+  addiction             String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relation to User
+  user                  User     @relation(fields: [userId], references: [id])
+
+  // One-to-Many relationships for goals and social life categories
+  goals                 Goal[]
+  socialLifeCategories  SocialLifeCategory[]
+}
+
+model Goal {
+  id             Int    @id @default(autoincrement())
+  botInteractionId Int
+  value          String
+
+  // Relation to BotInteraction
+  botInteraction BotInteraction @relation(fields: [botInteractionId], references: [id], onDelete: Cascade)
+}
+
+model SocialLifeCategory {
+  id             Int    @id @default(autoincrement())
+  botInteractionId Int
+  value          String
+
+  // Relation to BotInteraction
+  botInteraction BotInteraction @relation(fields: [botInteractionId], references: [id], onDelete: Cascade)
 }

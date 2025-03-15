@@ -26,7 +26,7 @@ export const login = async (req, res) => {
     }
 
     // Optionally, you can generate a JWT token for the logged-in user
-    const token = await authService.generateToken(user);
+    const token = authService.generateToken(user);
 
     // Return success with user details and token
     return res.status(200).json({ message: 'Login successful', user, token });
