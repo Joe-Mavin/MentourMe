@@ -1,4 +1,4 @@
-import { createBotInteraction, getBotInteractionsByUser, updateBotInteraction, deleteBotInteraction } from '../models/botInteraction.mjs/index.js';
+import { createBotInteraction, getBotInteractionsByUser, updateBotInteraction, deleteBotInteraction } from '../models/botInteraction.mjs/index.mjs';
 
 // Controller to create a new bot interaction
 export const createInteraction = async (req, res) => {
