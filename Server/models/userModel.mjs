@@ -1,11 +1,22 @@
-import { PrismaClient } from '@prisma/client';
+import { DataTypes } from "sequelize";
+import sequelize from "../db.mjs";
 
-const prisma = new PrismaClient();
+const User = sequelize.define("User", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
-export const createUser = async (data) => {
-  return await prisma.user.create({ data });
-};
+export default User;
 
-export const findUserByEmail = async (email) => {
-  return await prisma.user.findUnique({ where: { email } });
-};
