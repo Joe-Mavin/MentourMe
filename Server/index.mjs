@@ -3,7 +3,7 @@ import authRoutes from "./routes/authRoutes.mjs";
 import botRoutes from "./routes/botRoutes.mjs";
 import bodyParser from "body-parser";
 import cors from "cors";
-import sequelize from "./db.mjs"; // Import Sequelize instance
+import sequelize from "./database.mjs"; // Import Sequelize instance
 import "./models/User.mjs"; // Ensure models are registered
 import "./models/BotInteraction.mjs"; // Import other models if needed
 import dotenv from "dotenv";
