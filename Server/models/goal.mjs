@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../db.mjs";
+import sequelize from "../database.mjs";
 import BotInteraction from "./BotInteraction.mjs";
 
 const Goal = sequelize.define("Goal", {
