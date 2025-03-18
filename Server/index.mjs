@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import sequelize from "./database.mjs"; // Import Sequelize instance
 import "./models/userModel.mjs"; // Ensure models are registered
-import "./models/BotInteraction.mjs"; // Import other models if needed
+import "./models/botInteraction.mjs"; // Import other models if needed
 import dotenv from "dotenv";
 
 dotenv.config(); // Load environment variables
