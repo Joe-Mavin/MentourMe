@@ -7,14 +7,9 @@ const User = sequelize.define("User", {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false, // Ensure this matches the signup request
-  },
-  username: {
+  name: {  
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   email: {
     type: DataTypes.STRING,
@@ -28,12 +23,9 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  phone: {
+  phone: {  
     type: DataTypes.STRING,
-    allowNull: false, // Ensure this matches the signup request
-    validate: {
-      isNumeric: true, // This ensures phone number contains only digits
-    },
+    allowNull: false,
   },
 });
 
