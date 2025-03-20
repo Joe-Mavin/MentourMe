@@ -18,7 +18,7 @@ const sequelize = new Sequelize(
   }
 );
 
-sequelize.sync({ force: true }) // ⚠ Deletes existing data
-  .then(() => console.log("Database re-synced ✅"));
+// sequelize.sync({ force: true }) // ⚠ Deletes existing data
+//   .then(() => console.log("Database re-synced ✅"));
 
 export default sequelize;
