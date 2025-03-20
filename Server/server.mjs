@@ -9,7 +9,6 @@ const app = express();
 app.use(express.json()); // Parse JSON requests
 
 app.use("/api/auth", authRoutes);
-app.use("/api/auth", authRoutes);
 
 console.log("Loaded DB_USER:", process.env.DB_USER);
 console.log("Loaded DB_NAME:", process.env.DB_NAME);
