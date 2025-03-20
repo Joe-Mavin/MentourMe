@@ -2,11 +2,13 @@ import express from "express";
 import dotenv from "dotenv";
 import sequelize from "./src/config/database.mjs";
 import authRoutes from "./src/routes/authroutes.mjs";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json()); // Parse JSON requests
+app.use(cors({ origin: "http://localhost:5173" }));
 
 app.use("/api/auth", authRoutes);
 
