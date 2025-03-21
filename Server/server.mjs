@@ -20,6 +20,6 @@ const PORT = process.env.PORT || 5001;
 sequelize.sync()
   .then(() => {
     console.log("Database connected ✅");
-    app.listen(PORT, "0.0.0.0", () => console.log(`Server running on all interfaces (0.0.0.0:5001)`));
+    app.listen(PORT, "localhost", () => console.log(`Server running on all interfaces (0.0.0.0:5001)`));
   })
   .catch((err) => console.error("DB Connection Error ❌", err));
