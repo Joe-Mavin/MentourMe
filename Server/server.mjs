@@ -16,6 +16,7 @@ app.use(cors({
 
 app.use(express.json()); // Parse JSON requests
 
+app.use("/",authRoutes);
 app.use("/api/auth", authRoutes);
 
 console.log("Loaded DB_USER:", process.env.DB_USER);
