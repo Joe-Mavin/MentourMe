@@ -3,7 +3,7 @@ import User from "../models/user.mjs";
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
