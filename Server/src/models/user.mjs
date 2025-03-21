@@ -25,7 +25,7 @@ const User = sequelize.define("User", {
   },
   phone: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
 }, {
   timestamps: true, // Adds createdAt & updatedAt automatically
