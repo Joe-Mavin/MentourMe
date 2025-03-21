@@ -55,7 +55,7 @@ const SignUpPage = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "/api/auth/signup",
+        "/auth/signup",
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
