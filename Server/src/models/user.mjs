@@ -25,11 +25,10 @@ const User = sequelize.define("User", {
   },
   phone: {
     type: DataTypes.STRING,
-    allowNull: false, // Ensure this matches the signup request
-    validate: {
-      isNumeric: true, // This ensures phone number contains only digits
-    },
+    allowNull: false,
   },
+}, {
+  timestamps: true, // Adds createdAt & updatedAt automatically
 });
 
 export default User;
