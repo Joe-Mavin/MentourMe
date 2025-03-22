@@ -55,7 +55,7 @@ const SignUpPage = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "/auth/signup",
+        "http://testmehere.onyangojp.tech:8080/api/auth/signup",
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
