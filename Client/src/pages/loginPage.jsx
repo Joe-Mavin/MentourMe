@@ -16,7 +16,7 @@ const LoginPage = () => {
     setErrorMessage(""); // Clear any previous error messages
 
     try {
-      const response = await fetch(`http://localhost:5000/auth/login`, {
+      const response = await fetch(`https://testmehere.onyangojp.tech/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
