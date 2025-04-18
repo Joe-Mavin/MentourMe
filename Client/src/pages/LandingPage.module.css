@@ -1,0 +1,114 @@
+.testimonialsSection {
+    padding: 2rem;
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .testimonialCard {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .testimonial p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  
+  .testimonial cite {
+    font-style: italic;
+    color: #555;
+  }
+  
+  .signUpCTA {
+    padding: 2rem 1rem;
+    text-align: center;
+    background-color: #eef7ff;
+  }
+  
+  .signUpCTA h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .signUpCTA p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: #004d99;
+  }
+  
+  .footer {
+    background-color: #222;
+    color: white;
+    padding: 1.5rem 1rem;
+    text-align: center;
+  }
+  
+  .footerNav {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  
+  .footerNav a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  
+  .footerIcon {
+    font-size: 1rem;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sectionTitle {
+      font-size: 1.5rem;
+    }
+  
+    .testimonialCard {
+      padding: 1rem;
+    }
+  
+    .signUpCTA h2 {
+      font-size: 1.5rem;
+    }
+  
+    .btn {
+      width: 100%;
+      max-width: 300px;
+    }
+  
+    .footerNav {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+  
