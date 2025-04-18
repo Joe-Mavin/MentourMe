@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaInfoCircle, FaPhoneAlt, FaLock } from "react-icons/fa";
 import { motion } from "framer-motion";
 import styles from "./LandingPage.module.css";
-import Slider from "./Slider"; // Assuming your custom slider component
+import Slider from "react-slick"; 
 
 const testimonials = [
   {
