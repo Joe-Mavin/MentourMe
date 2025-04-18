@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaInfoCircle, FaPhoneAlt, FaLock } from "react-icons/fa";
 import { motion } from "framer-motion";
+import Slider from "react-slick";
 import styles from "./LandingPage.module.css";
-import Slider from "react-slick"; 
 
 const testimonials = [
   {
@@ -19,6 +19,16 @@ const testimonials = [
 ];
 
 const LandingPage = () => {
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+  };
+
   return (
     <>
       {/* Testimonials Section */}
@@ -31,7 +41,7 @@ const LandingPage = () => {
         >
           What Our Users Say
         </motion.h2>
-        <Slider>
+        <Slider {...sliderSettings} className={styles.slider}>
           {testimonials.map((item, index) => (
             <motion.div
               key={index}

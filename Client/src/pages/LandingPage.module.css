@@ -1,69 +1,76 @@
 .testimonialsSection {
-    padding: 2rem;
+    padding: 2rem 1rem;
+    background-color: #f4f4f4;
     text-align: center;
-    background-color: #f9f9f9;
   }
   
   .sectionTitle {
     font-size: 2rem;
     margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .slider {
+    max-width: 700px;
+    margin: 0 auto;
   }
   
   .testimonialCard {
-    max-width: 600px;
-    margin: 0 auto;
     padding: 1.5rem;
-    background-color: #ffffff;
+    background-color: #fff;
     border-radius: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: 0 auto;
   }
   
   .testimonial p {
     font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 0.5rem;
+    color: #333;
+    margin-bottom: 0.8rem;
   }
   
   .testimonial cite {
     font-style: italic;
-    color: #555;
+    color: #777;
   }
   
   .signUpCTA {
-    padding: 2rem 1rem;
+    padding: 3rem 1rem;
+    background-color: #e5f3ff;
     text-align: center;
-    background-color: #eef7ff;
   }
   
   .signUpCTA h2 {
     font-size: 1.8rem;
     margin-bottom: 1rem;
+    color: #002d62;
   }
   
   .signUpCTA p {
     font-size: 1rem;
     margin-bottom: 1.5rem;
+    color: #333;
   }
   
   .btn {
     padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    background-color: #0066cc;
+    background-color: #0077cc;
     color: white;
+    font-size: 1rem;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color 0.3s;
   }
   
   .btn:hover {
-    background-color: #004d99;
+    background-color: #005fa3;
   }
   
   .footer {
-    background-color: #222;
-    color: white;
-    padding: 1.5rem 1rem;
+    background-color: #1c1c1c;
+    color: #fff;
+    padding: 2rem 1rem;
     text-align: center;
   }
   
@@ -72,12 +79,13 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 1.2rem;
   }
   
   .footerNav a {
-    color: white;
+    color: #fff;
     text-decoration: none;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -87,7 +95,7 @@
     font-size: 1rem;
   }
   
-  /* Responsive */
+  /* Responsive Design */
   @media (max-width: 768px) {
     .sectionTitle {
       font-size: 1.5rem;
