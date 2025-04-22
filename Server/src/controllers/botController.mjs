@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import Interaction from "../models/bot.mjs"; // Make sure path is correct
 
 export const handleInteraction = async (req, res) => {
   try {
@@ -13,7 +14,7 @@ export const handleInteraction = async (req, res) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
-    // Access the request body
+    // Extract data from request body
     const {
       name,
       age,
@@ -24,13 +25,25 @@ export const handleInteraction = async (req, res) => {
       socialLifeCategories,
     } = req.body;
 
-    // You can log or process data here, save to DB, etc.
-    console.log("Received interaction from:", decoded.name);
-    console.log("Form Data:", req.body);
+    // Save to DB
+    const newInteraction = await Interaction.create({
+      name,
+      age,
+      goals,
+      confidenceLevels,
+      timeAvailability,
+      addiction,
+      socialLifeCategories,
+      userId: decoded.id, // assuming token includes user id
+    });
 
-    // Optionally save this data in a DB model e.g. `Interaction.create({ ... })`
+    console.log("New interaction saved:", newInteraction.id);
 
-    res.status(200).json({ message: "Interaction received successfully", submittedBy: decoded.name });
+    res.status(201).json({
+      message: "Interaction received and saved successfully",
+      interactionId: newInteraction.id,
+      submittedBy: decoded.name,
+    });
   } catch (error) {
     console.error("Interaction error:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });
