@@ -5,7 +5,7 @@ const Summary = ({ data, onComplete, back }) => {
   const handleComplete = async () => {
     console.log("Sending data:", data);
     try {
-      const response = await fetch("http://localhost:5000/api/bot/interactions", {
+      const response = await fetch("https://testmehere.onyangojp.tech/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
