@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import sequelize from "./src/config/database.mjs";
 import authRoutes from "./src/routes/authroutes.mjs";
+import botRoutes from "./src/routes/botroutes.mjs"
 import cors from "cors";
 
 dotenv.config();
@@ -19,6 +20,8 @@ app.use(express.json()); // Parse JSON requests
 app.use("/",authRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/auth", authRoutes); // No /api prefix
+app.use("/api/bot", botRoutes);
+app.use("/bot",botRoutes)
 
 console.log("Loaded DB_USER:", process.env.DB_USER);
 console.log("Loaded DB_NAME:", process.env.DB_NAME);
