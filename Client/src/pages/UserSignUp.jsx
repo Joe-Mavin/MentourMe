@@ -9,6 +9,7 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import styles from "../assets/styles/signUp.module.css";
+import { ENDPOINTS } from "../config/environment";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -55,7 +56,7 @@ const SignUpPage = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "https://testmehere.onyangojp.tech/api/auth/signup",
+        ENDPOINTS.AUTH.SIGNUP,
         formData,
         { headers: { "Content-Type": "application/json" } }
       );

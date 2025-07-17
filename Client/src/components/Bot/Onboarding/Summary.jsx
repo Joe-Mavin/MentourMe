@@ -8,15 +8,18 @@ const Summary = ({ data, onComplete, back }) => {
   const handleComplete = async () => {
     setError(null);
     setIsSubmitting(true);
-    
+
+    // Ensure age is a number
+    const payload = { ...data, age: Number(data.age) };
+
     try {
       const response = await fetch(ENDPOINTS.BOT.INTERACTIONS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, 
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
@@ -66,8 +69,8 @@ const Summary = ({ data, onComplete, back }) => {
       {/* Back and Complete buttons */}
       <div className="navigation" style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
         <button onClick={back} style={buttonStyle} disabled={isSubmitting}>Back</button>
-        <button 
-          onClick={handleComplete} 
+        <button
+          onClick={handleComplete}
           style={{
             ...buttonStyle,
             opacity: isSubmitting ? 0.7 : 1,
