@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
+import { ENDPOINTS } from "../../../config/environment";
 
 const Summary = ({ data, onComplete, back }) => {
+  const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleComplete = async () => {
-    console.log("Sending data:", data);
+    setError(null);
+    setIsSubmitting(true);
+    
     try {
-      const response = await fetch("https://testmehere.onyangojp.tech/api/auth/signup", {
+      const response = await fetch(ENDPOINTS.BOT.INTERACTIONS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -17,16 +22,26 @@ const Summary = ({ data, onComplete, back }) => {
       if (response.ok) {
         onComplete();
       } else {
-        console.error("Failed to save data:", await response.json());
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to save data. Please try again.');
+        console.error("Failed to save data:", errorData);
       }
     } catch (error) {
+      setError('Network error. Please check your connection and try again.');
       console.error("Error during submission:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="summary" style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
       <h2>Summary of Your Choices</h2>
+      {error && (
+        <div style={{ color: 'red', marginBottom: '15px', padding: '10px', backgroundColor: '#ffebee', borderRadius: '4px' }}>
+          {error}
+        </div>
+      )}
       <p><strong>Name:</strong> {data.name}</p>
       <p><strong>Age:</strong> {data.age}</p>
       <p><strong>Goals:</strong> {data.goals.join(", ")}</p>
@@ -50,8 +65,18 @@ const Summary = ({ data, onComplete, back }) => {
 
       {/* Back and Complete buttons */}
       <div className="navigation" style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-        <button onClick={back} style={buttonStyle}>Back</button>
-        <button onClick={handleComplete} style={buttonStyle}>Complete</button>
+        <button onClick={back} style={buttonStyle} disabled={isSubmitting}>Back</button>
+        <button 
+          onClick={handleComplete} 
+          style={{
+            ...buttonStyle,
+            opacity: isSubmitting ? 0.7 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'pointer'
+          }}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Submitting...' : 'Complete'}
+        </button>
       </div>
     </div>
   );

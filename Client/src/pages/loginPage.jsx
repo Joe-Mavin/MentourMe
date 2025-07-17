@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import styles from "../assets/styles/login.module.css";
+import { ENDPOINTS } from "../config/environment";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ const LoginPage = () => {
     setErrorMessage(""); // Clear any previous error messages
 
     try {
-      const response = await fetch(`https://testmehere.onyangojp.tech/api/auth/login`, {
+      const response = await fetch(ENDPOINTS.AUTH.LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
