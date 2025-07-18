@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, useTheme, Paper } from "@mui/material";
+import { Box, Typography, useTheme, Paper, Button } from "@mui/material";
 import SidebarItem from "../reusable/SidebarItem";
 import HouseIcon from "@mui/icons-material/House";
 import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
@@ -8,9 +8,18 @@ import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import { useNavigate } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Sidebar = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('onboarded');
+    navigate('/login');
+  };
 
   return (
     <Paper
@@ -58,8 +67,22 @@ const Sidebar = () => {
         <SidebarItem icon={<Diversity1Icon  />} label="Peers" />
       </Box>
 
+      {/* Logout Button */}
+      <Box sx={{ width: '100%', mt: 2 }}>
+        <Button
+          variant="outlined"
+          color="error"
+          fullWidth
+          startIcon={<LogoutIcon />}
+          onClick={handleLogout}
+          sx={{ borderRadius: 3, fontWeight: 700, mb: 2 }}
+        >
+          Logout
+        </Button>
+      </Box>
+
       {/* Footer or version info (optional) */}
-      <Typography variant="caption" sx={{ color: theme.palette.text.secondary, mt: 4 }}>
+      <Typography variant="caption" sx={{ color: theme.palette.text.secondary, mt: 2 }}>
         &copy; {new Date().getFullYear()} MentourMe
       </Typography>
     </Paper>
