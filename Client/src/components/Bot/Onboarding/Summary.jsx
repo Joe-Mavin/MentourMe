@@ -4,6 +4,7 @@ import { ENDPOINTS } from "../../../config/environment";
 const Summary = ({ data, onComplete, back }) => {
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleComplete = async () => {
     setError(null);
@@ -23,19 +24,42 @@ const Summary = ({ data, onComplete, back }) => {
       });
 
       if (response.ok) {
-        onComplete();
+        setSuccess(true);
+        setTimeout(() => {
+          onComplete();
+        }, 2500); // Show message for 2.5 seconds before redirect
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to save data. Please try again.');
-        console.error("Failed to save data:", errorData);
+        let errorMsg = 'Failed to save data. Please try again.';
+        try {
+          const errorData = await response.json();
+          errorMsg = errorData.message || errorMsg;
+        } catch (e) {}
+        setError(errorMsg);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } catch (error) {
       setError('Network error. Please check your connection and try again.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       console.error("Error during submission:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className="summary" style={{ padding: "20px", maxWidth: "600px", margin: "auto", textAlign: "center" }}>
+        <h2 style={{ color: '#007bff', marginBottom: '20px' }}>You are onboard a life-changing journey!</h2>
+        <p style={{ fontSize: '1.2em', color: '#333', marginBottom: '10px' }}>
+          Welcome to <span style={{ fontWeight: 'bold', color: '#007bff' }}>Mahood</span>.<br/>
+          This is where men become their best selves.<br/>
+          Get ready to unlock your potential, build confidence, and connect with a brotherhood of achievers.<br/>
+          <span style={{ color: '#007bff', fontWeight: 'bold' }}>Your journey to greatness starts now.</span>
+        </p>
+        <p style={{ color: '#888', marginTop: '30px' }}>Redirecting to your dashboard...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="summary" style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
