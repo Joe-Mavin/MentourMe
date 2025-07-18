@@ -25,10 +25,16 @@ export const handleInteraction = async (req, res) => {
       socialLifeCategories,
     } = req.body;
 
+    // Validate age is a number
+    const ageInt = parseInt(age, 10);
+    if (isNaN(ageInt)) {
+      return res.status(400).json({ message: "Age must be a number" });
+    }
+
     // Save to DB
     const newInteraction = await Interaction.create({
       name,
-      age,
+      age: ageInt,
       goals,
       confidenceLevels,
       timeAvailability,
