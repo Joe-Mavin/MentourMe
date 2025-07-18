@@ -33,7 +33,7 @@ const UserDashboard = () => {
         <Card sx={{ mb: 4, borderRadius: 4, boxShadow: 3, background: 'linear-gradient(90deg, #2563eb 0%, #1e40af 100%)' }}>
           <CardContent>
             <Typography variant="h3" fontWeight={800} color="#fff" mb={1}>
-              Welcome to Mahood
+              Welcome to MentourMe
             </Typography>
             <Typography variant="h6" color="#e0e7ef">
               Your journey to greatness starts here. Explore your dashboard and unlock your full potential.

@@ -39,7 +39,7 @@ const Sidebar = () => {
           fontFamily: 'Plus Jakarta Display, Inter, sans-serif',
         }}
       >
-        Mahood
+        MentourMe
       </Typography>
 
       {/* Sidebar Items */}
@@ -55,7 +55,7 @@ const Sidebar = () => {
 
       {/* Footer or version info (optional) */}
       <Typography variant="caption" sx={{ color: theme.palette.text.secondary, mt: 4 }}>
-        &copy; {new Date().getFullYear()} Mahood
+        &copy; {new Date().getFullYear()} MentourMe
       </Typography>
     </Paper>
   );
