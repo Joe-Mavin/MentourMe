@@ -27,6 +27,11 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,  // Ensure this field exists
     allowNull: false,        // Cannot be NULL
   },
+  onboarded: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
 }, {
   timestamps: true, // Adds createdAt & updatedAt automatically
 });

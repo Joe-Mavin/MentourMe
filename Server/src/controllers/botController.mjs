@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import Interaction from "../models/bot.mjs"; // Make sure path is correct
+import User from "../models/user.mjs";
 
 export const handleInteraction = async (req, res) => {
   try {
@@ -42,6 +43,9 @@ export const handleInteraction = async (req, res) => {
       socialLifeCategories,
       userId: decoded.id, // assuming token includes user id
     });
+
+    // Mark user as onboarded
+    await User.update({ onboarded: true }, { where: { id: decoded.id } });
 
     console.log("New interaction saved:", newInteraction.id);
 

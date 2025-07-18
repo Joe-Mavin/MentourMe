@@ -38,6 +38,8 @@ const LoginPage = () => {
       if (responseData.token) {
         // Store the token in localStorage
         localStorage.setItem("token", responseData.token);
+        // Store onboarding status
+        localStorage.setItem("onboarded", responseData.onboarded ? 'true' : 'false');
 
         // After successful login, check if the token is available
         const token = localStorage.getItem("token");

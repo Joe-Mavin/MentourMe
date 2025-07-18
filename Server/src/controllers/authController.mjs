@@ -59,6 +59,7 @@ export const login = async (req, res) => {
     res.status(200).json({
       message: "Login successful",
       token, // Send token to frontend
+      onboarded: user.onboarded, // Send onboarding status
     });
   } catch (error) {
     console.error("Login error:", error);
