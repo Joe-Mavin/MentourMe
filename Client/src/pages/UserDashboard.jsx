@@ -1,6 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Sidebar from '../components/dashboard/sidebar'
-import { Box, Typography, Card, CardContent, Grid, useTheme } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  useTheme,
+  Container,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Drawer,
+  Hidden,
+} from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
 
 const features = [
   {
@@ -25,46 +39,91 @@ const features = [
   },
 ]
 
+const drawerWidth = 260
+
 const UserDashboard = () => {
-  const theme = useTheme();
+  const theme = useTheme()
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen)
+  }
+
   return (
-    <Box display="flex" minHeight="100vh" bgcolor={theme.palette.background.default}>
-      {/* Sidebar: visible on all sizes for now, can be made collapsible for mobile in future */}
-      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-        <Sidebar />
-      </Box>
-      <Box flex={1} p={{ xs: 1, sm: 2, md: 4 }} width="100%">
-        <Card sx={{ mb: 4, borderRadius: 4, boxShadow: 3, background: 'linear-gradient(90deg, #3a8bfd 0%, #1e40af 100%)' }}>
-          <CardContent>
-            <Typography variant="h3" fontWeight={800} color="#fff" mb={1} sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}>
-              Welcome to MentourMe
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: theme.palette.background.default }}>
+      {/* AppBar for mobile */}
+      <Hidden mdUp>
+        <AppBar position="fixed" color="transparent" elevation={0} sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
+          <Toolbar>
+            <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" fontWeight={900} color="primary" sx={{ flexGrow: 1, letterSpacing: 2 }}>
+              MentourMe
             </Typography>
-            <Typography variant="h6" color="#e0e7ef" sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>
-              Your journey to greatness starts here. Explore your dashboard and unlock your full potential.
-            </Typography>
-          </CardContent>
-        </Card>
-        <Grid container spacing={3}>
-          {features.map((feature, idx) => (
-            <Grid item xs={12} md={6} key={feature.title}>
-              <Card sx={{ borderRadius: 4, boxShadow: 2, minHeight: 160, position: 'relative', p: 2 }}>
-                <CardContent>
-                  <Typography variant="h5" fontWeight={700} color="primary.main" mb={1} sx={{ fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
-                    {feature.title}
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary" mb={2} sx={{ fontSize: { xs: '0.95rem', md: '1rem' } }}>
-                    {feature.description}
-                  </Typography>
-                  {feature.comingSoon && (
-                    <Box sx={{ position: 'absolute', top: 16, right: 16, bgcolor: '#fbbf24', color: '#222', px: 2, py: 0.5, borderRadius: 2, fontWeight: 700, fontSize: '0.95rem' }}>
-                      Coming soon
-                    </Box>
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+              bgcolor: theme.palette.background.paper,
+            },
+          }}
+        >
+          <Sidebar />
+        </Drawer>
+      </Hidden>
+      {/* Sidebar for desktop */}
+      <Hidden mdDown>
+        <Box sx={{ width: drawerWidth, flexShrink: 0 }}>
+          <Sidebar />
+        </Box>
+      </Hidden>
+      {/* Main Content */}
+      <Box component="main" sx={{ flexGrow: 1, width: '100%' }}>
+        {/* Add top spacing for mobile AppBar */}
+        <Hidden mdUp>
+          <Toolbar />
+        </Hidden>
+        <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
+          <Card sx={{ mb: 4, borderRadius: 4, boxShadow: 3, background: 'linear-gradient(90deg, #3a8bfd 0%, #1e40af 100%)', maxWidth: 900, mx: 'auto' }}>
+            <CardContent>
+              <Typography variant="h3" fontWeight={800} color="#fff" mb={1} sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}>
+                Welcome to MentourMe
+              </Typography>
+              <Typography variant="h6" color="#e0e7ef" sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>
+                Your journey to greatness starts here. Explore your dashboard and unlock your full potential.
+              </Typography>
+            </CardContent>
+          </Card>
+          <Grid container spacing={3}>
+            {features.map((feature, idx) => (
+              <Grid item xs={12} sm={6} md={4} key={feature.title}>
+                <Card sx={{ borderRadius: 4, boxShadow: 2, minHeight: 180, position: 'relative', p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
+                  <CardContent sx={{ width: '100%' }}>
+                    <Typography variant="h5" fontWeight={700} color="primary.main" mb={1} sx={{ fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary" mb={2} sx={{ fontSize: { xs: '0.95rem', md: '1rem' } }}>
+                      {feature.description}
+                    </Typography>
+                    {feature.comingSoon && (
+                      <Box sx={{ position: 'absolute', top: 16, right: 16, bgcolor: '#fbbf24', color: '#222', px: 2, py: 0.5, borderRadius: 2, fontWeight: 700, fontSize: '0.95rem' }}>
+                        Coming soon
+                      </Box>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       </Box>
     </Box>
   )
