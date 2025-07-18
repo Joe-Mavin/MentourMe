@@ -18,6 +18,9 @@ const OnboardingContainer = ({ onComplete }) => {
     addiction: "", // New field for Addiction
   });
 
+  // Ensure onComplete is always a function
+  const handleOnComplete = typeof onComplete === 'function' ? onComplete : () => {};
+
   const updateUserData = (key, value) => {
     setUserData((prev) => ({ ...prev, [key]: value }));
   };
@@ -46,7 +49,7 @@ const OnboardingContainer = ({ onComplete }) => {
     ] : []),
     <Step3Confidence data={userData} update={updateUserData} next={nextStep} back={prevStep} />,
     <Step4TimeAvailability data={userData} update={updateUserData} next={nextStep} back={prevStep} />,
-    <Summary data={userData} onComplete={onComplete} back={prevStep} />,
+    <Summary data={userData} onComplete={handleOnComplete} back={prevStep} />,
   ];
 
   return <div className="onboarding-container">{steps[step - 1]}</div>;
