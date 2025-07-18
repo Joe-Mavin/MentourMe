@@ -32,11 +32,16 @@ const Sidebar = () => {
       <Typography
         variant="h4"
         sx={{
-          fontWeight: 800,
+          fontWeight: 900,
           letterSpacing: 2,
-          color: theme.palette.primary.main,
+          color: '#fff',
           mb: 4,
           fontFamily: 'Plus Jakarta Display, Inter, sans-serif',
+          textShadow: '0 0 16px #3a8bfd, 0 2px 8px #1e2a78',
+          background: 'linear-gradient(90deg, #3a8bfd 0%, #fff 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          display: 'inline-block',
         }}
       >
         MentourMe
