@@ -8,6 +8,7 @@ import {
   FaEye,
   FaEyeSlash,
 } from "react-icons/fa";
+import { Box, Card, CardContent, Typography, TextField, Button, InputAdornment, IconButton } from "@mui/material";
 import styles from "../assets/styles/signUp.module.css";
 import { ENDPOINTS } from "../config/environment";
 
@@ -78,83 +79,105 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className={styles.signUpContainer}>
-      <h1 className={styles.title}>Create Your Account</h1>
-      <form className={styles.signUpForm} onSubmit={HandleSubmit}>
-        <div className={styles.inputGroup}>
-          <FaUser className={styles.inputIcon} />
-          <input
-            type="text"
-            placeholder="Full Name"
-            required
-            className={styles.input}
-            name="name"
-            value={formData.name}
-            onChange={HandleChange}
-          />
-        </div>
-
-        <div className={styles.inputGroup}>
-          <FaEnvelope className={styles.inputIcon} />
-          <input
-            type="email"
-            placeholder="Email Address"
-            required
-            className={styles.input}
-            name="email"
-            value={formData.email}
-            onChange={HandleChange}
-          />
-        </div>
-
-        <div className={styles.inputGroup}>
-          <FaLock className={styles.inputIcon} />
-          <div className={styles.passwordWrapper}>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              required
-              className={styles.input}
-              name="password"
-              value={formData.password}
-              onChange={HandleChange}
-            />
-            <span
-              className={styles.eyeIcon}
-              onClick={() => setShowPassword(!showPassword)}
-              role="button"
-              aria-label="Toggle password visibility"
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-        </div>
-
-        <div className={styles.inputGroup}>
-          <FaPhoneAlt className={styles.inputIcon} />
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            required
-            className={styles.input}
-            name="phone"
-            value={formData.phone}
-            onChange={HandleChange}
-          />
-        </div>
-
-        <button type="submit" className={styles.btn} disabled={isLoading}>
-          {isLoading ? "Creating..." : "Sign Up"}
-        </button>
-      </form>
-
-      {error && <p className={styles.errorText}>{error}</p>}
-      {success && <p className={styles.successText}>{success}</p>}
-
-      <p className={styles.footerText}>
-        Already have an account? <a href="/login">Log In</a>
-      </p>
-    </div>
+    <Box minHeight="100vh" display="flex" alignItems="center" justifyContent="center" bgcolor="background.default" px={2}>
+      <Card sx={{ maxWidth: 400, width: '100%', borderRadius: 4, boxShadow: 3, p: { xs: 1, sm: 2 } }}>
+        <CardContent>
+          <Typography variant="h4" fontWeight={800} color="primary" mb={2} textAlign="center">
+            Create Your Account
+          </Typography>
+          <form onSubmit={HandleSubmit} style={{ width: '100%' }}>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <TextField
+                label="Full Name"
+                name="name"
+                value={formData.name}
+                onChange={HandleChange}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FaUser />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Email Address"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={HandleChange}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FaEnvelope />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={HandleChange}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FaLock />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small">
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Phone Number"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={HandleChange}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FaPhoneAlt />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth
+                sx={{ borderRadius: 3, fontWeight: 700, mt: 1 }}
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating..." : "Sign Up"}
+              </Button>
+            </Box>
+          </form>
+          {error && <Typography color="error" mt={2} textAlign="center">{error}</Typography>}
+          {success && <Typography color="success.main" mt={2} textAlign="center">{success}</Typography>}
+          <Typography variant="body2" color="text.secondary" mt={3} textAlign="center">
+            Already have an account? <a href="/login" style={{ color: '#3a8bfd', textDecoration: 'underline' }}>Log In</a>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 

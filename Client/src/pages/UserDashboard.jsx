@@ -1,6 +1,6 @@
 import React from 'react'
 import Sidebar from '../components/dashboard/sidebar'
-import { Box, Typography, Card, CardContent, Grid } from '@mui/material'
+import { Box, Typography, Card, CardContent, Grid, useTheme } from '@mui/material'
 
 const features = [
   {
@@ -26,16 +26,20 @@ const features = [
 ]
 
 const UserDashboard = () => {
+  const theme = useTheme();
   return (
-    <Box display="flex" minHeight="100vh" bgcolor="#f7f9fb">
-      <Sidebar />
-      <Box flex={1} p={4}>
-        <Card sx={{ mb: 4, borderRadius: 4, boxShadow: 3, background: 'linear-gradient(90deg, #2563eb 0%, #1e40af 100%)' }}>
+    <Box display="flex" minHeight="100vh" bgcolor={theme.palette.background.default}>
+      {/* Sidebar: visible on all sizes for now, can be made collapsible for mobile in future */}
+      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Sidebar />
+      </Box>
+      <Box flex={1} p={{ xs: 1, sm: 2, md: 4 }} width="100%">
+        <Card sx={{ mb: 4, borderRadius: 4, boxShadow: 3, background: 'linear-gradient(90deg, #3a8bfd 0%, #1e40af 100%)' }}>
           <CardContent>
-            <Typography variant="h3" fontWeight={800} color="#fff" mb={1}>
+            <Typography variant="h3" fontWeight={800} color="#fff" mb={1} sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}>
               Welcome to MentourMe
             </Typography>
-            <Typography variant="h6" color="#e0e7ef">
+            <Typography variant="h6" color="#e0e7ef" sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>
               Your journey to greatness starts here. Explore your dashboard and unlock your full potential.
             </Typography>
           </CardContent>
@@ -45,10 +49,10 @@ const UserDashboard = () => {
             <Grid item xs={12} md={6} key={feature.title}>
               <Card sx={{ borderRadius: 4, boxShadow: 2, minHeight: 160, position: 'relative', p: 2 }}>
                 <CardContent>
-                  <Typography variant="h5" fontWeight={700} color="primary.main" mb={1}>
+                  <Typography variant="h5" fontWeight={700} color="primary.main" mb={1} sx={{ fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
                     {feature.title}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" mb={2}>
+                  <Typography variant="body1" color="text.secondary" mb={2} sx={{ fontSize: { xs: '0.95rem', md: '1rem' } }}>
                     {feature.description}
                   </Typography>
                   {feature.comingSoon && (

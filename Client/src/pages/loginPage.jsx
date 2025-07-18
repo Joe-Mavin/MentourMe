@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import { Box, Card, CardContent, Typography, TextField, Button, InputAdornment, IconButton } from "@mui/material";
 import styles from "../assets/styles/login.module.css";
 import { ENDPOINTS } from "../config/environment";
 
@@ -9,6 +10,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -52,43 +54,74 @@ const LoginPage = () => {
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <h1 className={styles.title}>Log In to Your Account</h1>
-      {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-      <form className={styles.loginForm} onSubmit={handleSubmit}>
-        <div className={styles.inputGroup}>
-          <FaEnvelope className={styles.inputIcon} />
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <FaLock className={styles.inputIcon} />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className={styles.input}
-          />
-        </div>
-        <button type="submit" className={styles.btn} disabled={isLoading}>
-          {isLoading ? "Logging In..." : "Log In"}
-        </button>
-      </form>
-      <p className={styles.footerText}>
-        Don't have an account? <Link to="/signup">Sign Up</Link>
-      </p>
-      <p className={styles.footerText}>
-        <Link to="/forgot-password">Forgot Password?</Link>
-      </p>
-    </div>
+    <Box minHeight="100vh" display="flex" alignItems="center" justifyContent="center" bgcolor="background.default" px={2}>
+      <Card sx={{ maxWidth: 400, width: '100%', borderRadius: 4, boxShadow: 3, p: { xs: 1, sm: 2 } }}>
+        <CardContent>
+          <Typography variant="h4" fontWeight={800} color="primary" mb={2} textAlign="center">
+            Log In to Your Account
+          </Typography>
+          {errorMessage && <Typography color="error" mb={2} textAlign="center">{errorMessage}</Typography>}
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <TextField
+                label="Email Address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FaEnvelope />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FaLock />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small">
+                        {showPassword ? <FaLock /> : <FaLock />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth
+                sx={{ borderRadius: 3, fontWeight: 700, mt: 1 }}
+                disabled={isLoading}
+              >
+                {isLoading ? "Logging In..." : "Log In"}
+              </Button>
+            </Box>
+          </form>
+          <Typography variant="body2" color="text.secondary" mt={3} textAlign="center">
+            Don't have an account? <Link to="/signup" style={{ color: '#3a8bfd', textDecoration: 'underline' }}>Sign Up</Link>
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mt={1} textAlign="center">
+            <Link to="/forgot-password" style={{ color: '#3a8bfd', textDecoration: 'underline' }}>Forgot Password?</Link>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 
