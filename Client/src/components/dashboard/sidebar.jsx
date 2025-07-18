@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Paper } from "@mui/material";
 import SidebarItem from "../reusable/SidebarItem";
 import HouseIcon from "@mui/icons-material/House";
 import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
@@ -13,58 +13,51 @@ const Sidebar = () => {
   const theme = useTheme();
 
   return (
-    <Box
+    <Paper
+      elevation={3}
       sx={{
-        bgcolor: theme.palette.primary.main, // Background color for Sidebar
-        border: "2px solid #fff", // Sidebar border
-        width: "250px", // Sidebar width
-        height: "100vh", // Full height for sidebar
-        position: "relative", // Allows child elements to use absolute positioning
-        paddingTop: "24px", // Adjust top padding for content
+        bgcolor: theme.palette.background.paper,
+        width: 260,
+        height: "100vh",
+        borderRadius: "24px 0 0 24px",
+        boxShadow: '0 8px 32px 0 rgba(37,99,235,0.08)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        py: 4,
+        px: 2,
       }}
     >
-      {/* Sidebar Header with Gradient Text Effect */}
+      {/* Sidebar Header with Figma-style accent */}
       <Typography
+        variant="h4"
         sx={{
-          padding: "16px",
-          fontFamily: theme.typography.fontFamily,
-          fontWeight: 500,
-          fontSize: "14px",
-          lineHeight: "100%",
-          letterSpacing: 7,
-          background:
-            "linear-gradient(to right, #FFFFFF 50%, rgba(117, 122, 140, 0.5) 75%, rgba(117, 122, 140, 0) 100%)", // Gradual fade from TOUR to ME
-          WebkitBackgroundClip: "text", // Clip gradient to text
-          WebkitTextFillColor: "transparent", // Transparent fill to reveal gradient
-          color: "transparent", // Fallback
+          fontWeight: 800,
+          letterSpacing: 2,
+          color: theme.palette.primary.main,
+          mb: 4,
+          fontFamily: 'Plus Jakarta Display, Inter, sans-serif',
         }}
       >
-        MENTOURME
+        Mahood
       </Typography>
 
-      {/* Sharp-edged, thick-in-middle Vector Line */}
-      <Box
-        sx={{
-          position: "absolute", // Positioned relative to Sidebar
-          top: "91.5px", // Distance from the top
-          left: "25px", // Distance from the left
-          width: "calc(100% - 50px)", // Adjusts width respecting left & right margins
-          height: "1px", // Thicker middle for the line
-          background:
-            "linear-gradient(to right, transparent, #E0E1E2, transparent)", // Gradient effect
-          borderRadius: "2px", // Sharp but slightly rounded edges
-        }}
-      />
-
       {/* Sidebar Items */}
-      <SidebarItem icon={<HouseIcon />} label="Dashboard" />
-      <SidebarItem icon={<ConnectWithoutContactIcon />} label="Connect" />
-      <SidebarItem icon={<SmartToyIcon />} label="Bot" route="/onboard"/>
-      <SidebarItem icon={<PersonIcon />} label="Profile" />
-      <SidebarItem icon={<SettingsIcon />} label="Settings" />
-      <SidebarItem icon={<ContactEmergencyIcon />} label="Mentor" />
-      <SidebarItem icon={<Diversity1Icon  />} label="Peers" />
-    </Box>
+      <Box sx={{ width: '100%', flex: 1 }}>
+        <SidebarItem icon={<HouseIcon />} label="Dashboard" />
+        <SidebarItem icon={<ConnectWithoutContactIcon />} label="Connect" />
+        <SidebarItem icon={<SmartToyIcon />} label="Bot" route="/onboard"/>
+        <SidebarItem icon={<PersonIcon />} label="Profile" />
+        <SidebarItem icon={<SettingsIcon />} label="Settings" />
+        <SidebarItem icon={<ContactEmergencyIcon />} label="Mentor" />
+        <SidebarItem icon={<Diversity1Icon  />} label="Peers" />
+      </Box>
+
+      {/* Footer or version info (optional) */}
+      <Typography variant="caption" sx={{ color: theme.palette.text.secondary, mt: 4 }}>
+        &copy; {new Date().getFullYear()} Mahood
+      </Typography>
+    </Paper>
   );
 };
 
