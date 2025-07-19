@@ -56,4 +56,4 @@ Respond ONLY in valid JSON (no explanation, no markdown):
   } catch (err) {
     throw new Error('Failed to parse AI response: ' + responseText);
   }
-} 
+}//done 
