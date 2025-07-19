@@ -527,7 +527,7 @@ const UserDashboard = () => {
                   ) : leaderboard.length === 0 ? (
                     <Typography>No leaderboard data yet.</Typography>
                   ) : (
-                    leaderboard.map((user, idx) => {
+                    leaderboard.slice(0, 5).map((user, idx) => {
                       // Highlight current user
                       const isCurrentUser = currentUser && user.name === currentUser;
                       return (
