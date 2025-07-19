@@ -2,6 +2,7 @@ import Journey from "../models/journey.mjs";
 import Task from "../models/task.mjs";
 import User from "../models/user.mjs";
 import jwt from "jsonwebtoken";
+import { generateJourneyWithAI } from '../services/aiService.mjs';
 
 // Helper: generate mock tasks for a journey
 function generateMockTasks(goal, startDate, userId, journeyId) {
@@ -36,22 +37,38 @@ export const generateJourney = async (req, res) => {
     const userId = decoded.id;
 
     // Use onboarding data from request or user profile
-    const { goal = 'Personal Development', startDate = new Date().toISOString().slice(0, 10) } = req.body;
+    const onboardingData = req.body;
+    let aiResult;
+    try {
+      aiResult = await generateJourneyWithAI(onboardingData);
+    } catch (err) {
+      console.error("AI generation failed, falling back to mock tasks:", err);
+      aiResult = { goal: onboardingData.goal || 'Personal Development', tasks: generateMockTasks(onboardingData.goal || 'Personal Development', onboardingData.startDate || new Date().toISOString().slice(0, 10), userId, null).map(t => ({ description: t.description })) };
+    }
+    const { goal, tasks } = aiResult;
+    const startDate = onboardingData.startDate || new Date().toISOString().slice(0, 10);
 
     // Create journey
     const journey = await Journey.create({
       userId,
       goal,
       startDate,
-      totalTasks: 7,
+      totalTasks: tasks.length,
       completedTasks: 0,
       points: 0,
       status: 'active',
     });
 
     // Generate and create tasks
-    const tasks = generateMockTasks(goal, startDate, userId, journey.id);
-    await Task.bulkCreate(tasks);
+    const dbTasks = tasks.map((t, i) => ({
+      journeyId: journey.id,
+      userId,
+      day: i + 1,
+      description: t.description,
+      dueDate: new Date(new Date(startDate).getTime() + i * 24 * 60 * 60 * 1000),
+      status: 'pending',
+    }));
+    await Task.bulkCreate(dbTasks);
 
     res.status(201).json({ message: 'Journey generated', journeyId: journey.id });
   } catch (error) {
