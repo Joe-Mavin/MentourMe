@@ -21,4 +21,7 @@ const sequelize = new Sequelize(
 // sequelize.sync({ force: true }) // ⚠ Deletes existing data
 //   .then(() => console.log("Database re-synced ✅"));
 
+// Add this after your sequelize instance is created:
+sequelize.sync({ alter: true }).then(() => console.log("Database updated (sync with alter) ✅"));
+
 export default sequelize;
