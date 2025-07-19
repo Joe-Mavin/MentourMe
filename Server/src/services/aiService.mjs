@@ -23,7 +23,7 @@ export async function generateJourneyWithAI(onboardingData) {
       'X-Title': 'MentourMe AI Journey'
     },
     body: JSON.stringify({
-      model: 'deepseek/deepseek-llm:free',
+      model: 'deepseek/deepseek-r1-0528-qwen3-8b:free',
       messages: [
         { role: 'system', content: 'You are a helpful, professional mentor AI.' },
         { role: 'user', content: prompt }
