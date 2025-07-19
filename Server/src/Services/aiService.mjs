@@ -13,7 +13,7 @@ export async function generateJourneyWithAI(onboardingData) {
     headers: {
       'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://yourdomain.com', // Optional, but recommended by OpenRouter
+      'HTTP-Referer': 'https://onyangojp.tech',
       'X-Title': 'MentourMe AI Journey'
     },
     body: JSON.stringify({
@@ -27,14 +27,24 @@ export async function generateJourneyWithAI(onboardingData) {
     })
   });
 
+  if (!response.ok) {
+    const errorBody = await response.text();
+    console.error('OpenRouter API error:', response.status, errorBody);
+    throw new Error(`OpenRouter API error: ${response.status} - ${errorBody}`);
+  }
+
   const data = await response.json();
   const responseText = data.choices?.[0]?.message?.content;
-  if (!responseText) throw new Error('No response from OpenRouter');
+  if (!responseText) {
+    console.error('No response from OpenRouter:', JSON.stringify(data));
+    throw new Error('No response from OpenRouter');
+  }
 
   try {
     const result = JSON.parse(responseText);
     return result;
   } catch (err) {
+    console.error('Failed to parse AI response:', responseText);
     throw new Error('Failed to parse AI response: ' + responseText);
   }
 } 
