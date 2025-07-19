@@ -251,6 +251,7 @@ const UserDashboard = () => {
   const [taskActionLoading, setTaskActionLoading] = useState(false);
   const [error, setError] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [generating, setGenerating] = useState(false);
 
   const fetchJourney = async () => {
     try {
@@ -307,6 +308,26 @@ const UserDashboard = () => {
       setSnackbar({ open: true, message: 'Failed to update task', severity: 'error' });
     } finally {
       setTaskActionLoading(false);
+    }
+  };
+
+  const handleGenerateJourney = async () => {
+    setGenerating(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('token');
+      // You can customize the payload as needed
+      const payload = { goal: 'Personal Development', startDate: new Date().toISOString().slice(0, 10) };
+      await axios.post(ENDPOINTS.BOT.GENERATE_JOURNEY, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSnackbar({ open: true, message: 'Journey created! 🎉', severity: 'success' });
+      await fetchJourney();
+      await fetchLeaderboard();
+    } catch (err) {
+      setSnackbar({ open: true, message: 'Failed to create journey', severity: 'error' });
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -424,7 +445,19 @@ const UserDashboard = () => {
                       <Typography>Loading journey...</Typography>
                     </Box>
                   ) : error && !journey ? (
-                    <Typography color="error">{error}</Typography>
+                    <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+                      <Typography color="error" textAlign="center">{error}</Typography>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        sx={{ borderRadius: 3, fontWeight: 700, minWidth: 180 }}
+                        onClick={handleGenerateJourney}
+                        disabled={generating}
+                      >
+                        {generating ? 'Creating...' : 'Start My Journey'}
+                      </Button>
+                    </Box>
                   ) : !todayTask && journey ? (
                     <Typography>No task for today. Enjoy your progress!</Typography>
                   ) : todayTask ? (
