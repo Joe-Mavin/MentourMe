@@ -12,13 +12,13 @@ const Summary = ({ data, onComplete, back }) => {
 
     // Ensure age is a number
     const payload = { ...data, age: Number(data.age) };
-
+    
     try {
       const response = await fetch(ENDPOINTS.BOT.INTERACTIONS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, 
         },
         body: JSON.stringify(payload),
       });
@@ -26,12 +26,12 @@ const Summary = ({ data, onComplete, back }) => {
       if (response.ok) {
         setSuccess(true);
         setTimeout(() => {
-          onComplete();
+        onComplete();
         }, 2500); // Show message for 2.5 seconds before redirect
       } else {
         let errorMsg = 'Failed to save data. Please try again.';
         try {
-          const errorData = await response.json();
+        const errorData = await response.json();
           errorMsg = errorData.message || errorMsg;
         } catch (e) {}
         setError(errorMsg);
@@ -93,8 +93,8 @@ const Summary = ({ data, onComplete, back }) => {
       {/* Back and Complete buttons */}
       <div className="navigation" style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
         <button onClick={back} style={buttonStyle} disabled={isSubmitting}>Back</button>
-        <button
-          onClick={handleComplete}
+        <button 
+          onClick={handleComplete} 
           style={{
             ...buttonStyle,
             opacity: isSubmitting ? 0.7 : 1,
