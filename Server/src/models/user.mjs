@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.mjs";
+import Journey from "./journey.mjs";
 
 const User = sequelize.define("User", {
   id: {
@@ -35,5 +36,7 @@ const User = sequelize.define("User", {
 }, {
   timestamps: true, // Adds createdAt & updatedAt automatically
 });
+
+User.hasMany(Journey, { foreignKey: 'userId', as: 'journeys' });
 
 export default User;

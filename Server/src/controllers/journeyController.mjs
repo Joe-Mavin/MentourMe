@@ -87,13 +87,99 @@ export const getJourney = async (req, res) => {
 };
 
 export const completeTask = async (req, res) => {
-  res.status(200).json({ message: 'Task marked as done (mock)' });
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = decoded.id;
+    const { id } = req.params;
+    // Find the task
+    const task = await Task.findOne({ where: { id, userId } });
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    if (task.status === 'done') {
+      return res.status(400).json({ message: "Task already completed" });
+    }
+    // Mark as done
+    task.status = 'done';
+    await task.save();
+    // Update journey progress and points
+    const journey = await Journey.findByPk(task.journeyId);
+    if (journey) {
+      journey.completedTasks += 1;
+      journey.points += 40; // Award points per task
+      // If all tasks done, mark journey as completed
+      if (journey.completedTasks >= journey.totalTasks) {
+        journey.status = 'completed';
+      }
+      await journey.save();
+    }
+    res.status(200).json({ message: 'Task marked as done', taskId: id });
+  } catch (error) {
+    console.error("Complete task error:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
 };
 
 export const skipTask = async (req, res) => {
-  res.status(200).json({ message: 'Task skipped (mock)' });
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = decoded.id;
+    const { id } = req.params;
+    // Find the task
+    const task = await Task.findOne({ where: { id, userId } });
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    if (task.status === 'skipped') {
+      return res.status(400).json({ message: "Task already skipped" });
+    }
+    // Mark as skipped
+    task.status = 'skipped';
+    await task.save();
+    res.status(200).json({ message: 'Task skipped', taskId: id });
+  } catch (error) {
+    console.error("Skip task error:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
 };
 
 export const getLeaderboard = async (req, res) => {
-  res.status(200).json({ message: 'Leaderboard data (mock)' });
+  try {
+    // Top users by journey points and completed tasks
+    const users = await User.findAll({
+      attributes: ['id', 'name'],
+      include: [{
+        model: Journey,
+        as: 'journeys',
+        attributes: ['points', 'completedTasks'],
+      }],
+    });
+    // Aggregate points and completedTasks
+    const leaderboard = users.map(user => {
+      const journeys = user.journeys || [];
+      const points = journeys.reduce((sum, j) => sum + (j.points || 0), 0);
+      const milestones = journeys.reduce((sum, j) => sum + (j.completedTasks || 0), 0);
+      return {
+        name: user.name,
+        points,
+        milestones,
+      };
+    });
+    // Sort by points desc, then milestones desc
+    leaderboard.sort((a, b) => b.points - a.points || b.milestones - a.milestones);
+    res.status(200).json({ leaderboard });
+  } catch (error) {
+    console.error("Leaderboard error:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
 }; 

@@ -28,6 +28,8 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import CircularProgress from '@mui/material/CircularProgress';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const features = [
   {
@@ -243,10 +245,86 @@ const mockLeaderboard = [
 const UserDashboard = () => {
   const theme = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [journey, setJourney] = useState(null);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [taskActionLoading, setTaskActionLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen)
+  const fetchJourney = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const res = await axios.get(ENDPOINTS.BOT.JOURNEY, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setJourney(res.data.journey);
+    } catch (err) {
+      setJourney(null);
+      setError('No journey found. Please complete onboarding or generate a journey.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchLeaderboard = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get(ENDPOINTS.BOT.LEADERBOARD, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setLeaderboard(res.data.leaderboard);
+    } catch (err) {
+      setLeaderboard([]);
+      setError('Failed to load leaderboard');
+    }
+  };
+
+  useEffect(() => {
+    fetchJourney();
+    fetchLeaderboard();
+    // eslint-disable-next-line
+  }, []);
+
+  const handleTaskAction = async (taskId, action) => {
+    setTaskActionLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('token');
+      const url = action === 'done' ? ENDPOINTS.BOT.COMPLETE_TASK(taskId) : ENDPOINTS.BOT.SKIP_TASK(taskId);
+      await axios.post(url, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      await fetchJourney(); // Refresh journey after action
+      await fetchLeaderboard(); // Refresh leaderboard
+      setSnackbar({
+        open: true,
+        message: action === 'done' ? 'Task marked as done! 🎉' : 'Task skipped.',
+        severity: action === 'done' ? 'success' : 'info',
+      });
+    } catch (err) {
+      setSnackbar({ open: true, message: 'Failed to update task', severity: 'error' });
+    } finally {
+      setTaskActionLoading(false);
+    }
+  };
+
+  // Find today's task (first pending task)
+  let todayTask = null;
+  if (journey && journey.tasks && journey.tasks.length > 0) {
+    todayTask = journey.tasks.find(t => t.status === 'pending');
   }
+  const progress = journey ? (journey.completedTasks / journey.totalTasks) * 100 : 0;
+
+  // Get current user name from localStorage (if available)
+  const currentUser = localStorage.getItem('name');
+
+  // Snackbar close handler
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: theme.palette.background.default }}>
@@ -254,7 +332,7 @@ const UserDashboard = () => {
       <Hidden mdUp>
         <AppBar position="fixed" color="transparent" elevation={0} sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
           <Toolbar>
-            <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
+            <IconButton color="inherit" edge="start" onClick={() => setMobileOpen(!mobileOpen)} sx={{ mr: 2 }} aria-label="Open sidebar menu">
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" fontWeight={900} color="primary" sx={{ flexGrow: 1, letterSpacing: 2 }}>
@@ -265,7 +343,7 @@ const UserDashboard = () => {
         <Drawer
           variant="temporary"
           open={mobileOpen}
-          onClose={handleDrawerToggle}
+          onClose={() => setMobileOpen(false)}
           ModalProps={{ keepMounted: true }}
           sx={{
             '& .MuiDrawer-paper': {
@@ -310,6 +388,7 @@ const UserDashboard = () => {
                       size={80}
                       thickness={5}
                       sx={{ color: '#fff', position: 'absolute', top: 0, left: 0 }}
+                      aria-label="Journey progress"
                     />
                     <Box sx={{
                       position: 'absolute',
@@ -331,38 +410,62 @@ const UserDashboard = () => {
                       My Journey
                     </Typography>
                     <Typography color="#e0e7ef" fontSize={14}>
-                      Goal: {mockJourney.goal}
+                      Goal: {journey ? journey.goal : '-'}
                     </Typography>
                     <Typography color="#e0e7ef" fontSize={14}>
-                      Points: <b>{mockJourney.points}</b>
+                      Points: <b>{journey ? journey.points : 0}</b>
                     </Typography>
                   </Box>
                 </Box>
                 <CardContent>
-                  {todayTask ? (
+                  {loading ? (
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <CircularProgress size={24} color="primary" />
+                      <Typography>Loading journey...</Typography>
+                    </Box>
+                  ) : error && !journey ? (
+                    <Typography color="error">{error}</Typography>
+                  ) : !todayTask && journey ? (
+                    <Typography>No task for today. Enjoy your progress!</Typography>
+                  ) : todayTask ? (
                     <Box>
                       <Typography variant="subtitle1" fontWeight={700} color="primary" mb={1}>
                         Today’s Task
                       </Typography>
-                      <Typography mb={2}>{todayTask.desc}</Typography>
+                      <Typography mb={2}>{todayTask.description}</Typography>
                       <Typography variant="body2" color="text.secondary" mb={2}>
-                        Due: {todayTask.due}
+                        Due: {todayTask.dueDate}
                       </Typography>
                       <Box display="flex" gap={2}>
-                        <Button variant="contained" color="success" startIcon={<CheckCircleIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
-                          Mark as Done
+                        <Button
+                          variant="contained"
+                          color="success"
+                          startIcon={<CheckCircleIcon />}
+                          sx={{ borderRadius: 3, fontWeight: 700 }}
+                          onClick={() => handleTaskAction(todayTask.id, 'done')}
+                          disabled={taskActionLoading}
+                          aria-label="Mark task as done"
+                        >
+                          {taskActionLoading ? 'Processing...' : 'Mark as Done'}
                         </Button>
-                        <Button variant="outlined" color="warning" startIcon={<SkipNextIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
+                        <Button
+                          variant="outlined"
+                          color="warning"
+                          startIcon={<SkipNextIcon />}
+                          sx={{ borderRadius: 3, fontWeight: 700 }}
+                          onClick={() => handleTaskAction(todayTask.id, 'skip')}
+                          disabled={taskActionLoading}
+                          aria-label="Skip task"
+                        >
                           Skip
                         </Button>
-                        <Button variant="outlined" color="info" startIcon={<FeedbackIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
+                        {/* Feedback button can be implemented later */}
+                        <Button variant="outlined" color="info" startIcon={<FeedbackIcon />} sx={{ borderRadius: 3, fontWeight: 700 }} disabled aria-label="Feedback">
                           Feedback
                         </Button>
                       </Box>
                     </Box>
-                  ) : (
-                    <Typography>No task for today. Enjoy your progress!</Typography>
-                  )}
+                  ) : null}
                 </CardContent>
               </Card>
             </Grid>
@@ -383,19 +486,32 @@ const UserDashboard = () => {
                   </Typography>
                 </Box>
                 <CardContent>
-                  {mockLeaderboard.map((user, idx) => (
-                    <Box key={user.name} display="flex" alignItems="center" gap={2} mb={1}>
-                      <Typography fontWeight={700} color={user.name === 'You' ? 'primary' : 'text.primary'}>
-                        {idx + 1}.
-                      </Typography>
-                      <Typography fontWeight={700} color={user.name === 'You' ? 'primary' : 'text.primary'}>
-                        {user.name}
-                      </Typography>
-                      <Typography color="text.secondary">Points: {user.points}</Typography>
-                      <Typography color="text.secondary">Milestones: {user.milestones}</Typography>
-                      {user.name === 'You' && <EmojiEventsIcon color="primary" fontSize="small" sx={{ ml: 1 }} />}
+                  {loading ? (
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <CircularProgress size={24} color="primary" />
+                      <Typography>Loading leaderboard...</Typography>
                     </Box>
-                  ))}
+                  ) : leaderboard.length === 0 ? (
+                    <Typography>No leaderboard data yet.</Typography>
+                  ) : (
+                    leaderboard.map((user, idx) => {
+                      // Highlight current user
+                      const isCurrentUser = currentUser && user.name === currentUser;
+                      return (
+                        <Box key={user.name} display="flex" alignItems="center" gap={2} mb={1} sx={{ bgcolor: isCurrentUser ? 'primary.light' : 'transparent', borderRadius: 2, px: 1 }}>
+                          <Typography fontWeight={700} color={isCurrentUser ? 'primary' : 'text.primary'}>
+                            {idx + 1}.
+                          </Typography>
+                          <Typography fontWeight={700} color={isCurrentUser ? 'primary' : 'text.primary'}>
+                            {user.name}
+                          </Typography>
+                          <Typography color="text.secondary">Points: {user.points}</Typography>
+                          <Typography color="text.secondary">Milestones: {user.milestones}</Typography>
+                          {isCurrentUser && <EmojiEventsIcon color="primary" fontSize="small" sx={{ ml: 1 }} />}
+                        </Box>
+                      );
+                    })
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -421,6 +537,12 @@ const UserDashboard = () => {
             ))}
           </Grid>
         </Container>
+        {/* Snackbar for feedback */}
+        <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+          <MuiAlert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }} elevation={6} variant="filled">
+            {snackbar.message}
+          </MuiAlert>
+        </Snackbar>
       </Box>
     </Box>
   )

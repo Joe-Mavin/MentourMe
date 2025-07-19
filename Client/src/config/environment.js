@@ -9,5 +9,10 @@ export const ENDPOINTS = {
     },
     BOT: {
         INTERACTIONS: `${API_BASE_URL}/bot/interactions`,
+        GENERATE_JOURNEY: `${API_BASE_URL}/bot/generate-journey`,
+        JOURNEY: `${API_BASE_URL}/bot/journey`,
+        COMPLETE_TASK: (id) => `${API_BASE_URL}/bot/task/${id}/complete`,
+        SKIP_TASK: (id) => `${API_BASE_URL}/bot/task/${id}/skip`,
+        LEADERBOARD: `${API_BASE_URL}/bot/leaderboard`,
     }
 }; 
