@@ -26,6 +26,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import CircularProgress from '@mui/material/CircularProgress';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 const features = [
   {
@@ -212,6 +214,32 @@ export const JourneyPage = () => {
   );
 };
 
+const mockJourney = {
+  goal: 'Personal Development',
+  startDate: '2024-07-01',
+  totalTasks: 7,
+  completedTasks: 3,
+  points: 120,
+  tasks: [
+    { day: 1, desc: 'Write down your top 3 personal goals.', done: true },
+    { day: 2, desc: 'Reflect on a recent challenge and how you handled it.', done: true },
+    { day: 3, desc: 'Read a chapter from a self-improvement book.', done: true },
+    { day: 4, desc: 'Practice 10 minutes of mindfulness meditation.', done: false, today: true, due: '2024-07-04' },
+    { day: 5, desc: 'Reach out to a mentor or peer for advice.', done: false },
+    { day: 6, desc: 'Set a new micro-habit for the week.', done: false },
+    { day: 7, desc: 'Review your progress and journal your thoughts.', done: false },
+  ],
+};
+const todayTask = mockJourney.tasks.find(t => t.today);
+const progress = (mockJourney.completedTasks / mockJourney.totalTasks) * 100;
+
+const mockLeaderboard = [
+  { name: 'Alice', points: 180, milestones: 4 },
+  { name: 'You', points: 120, milestones: 3 },
+  { name: 'Bob', points: 90, milestones: 2 },
+  { name: 'Carol', points: 60, milestones: 1 },
+];
+
 const UserDashboard = () => {
   const theme = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -263,17 +291,115 @@ const UserDashboard = () => {
           <Toolbar />
         </Hidden>
         <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
-          <Card sx={{ mb: 4, borderRadius: 4, boxShadow: 3, background: 'linear-gradient(90deg, #3a8bfd 0%, #1e40af 100%)', maxWidth: 900, mx: 'auto' }}>
-            <CardContent>
-              <Typography variant="h3" fontWeight={800} color="#fff" mb={1} sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}>
-                Welcome to MentourMe
-              </Typography>
-              <Typography variant="h6" color="#e0e7ef" sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>
-                Your journey to greatness starts here. Explore your dashboard and unlock your full potential.
-              </Typography>
-            </CardContent>
-          </Card>
           <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              {/* My Journey Card */}
+              <Card sx={{ borderRadius: 4, boxShadow: 6, p: 0, overflow: 'hidden', mb: 3 }}>
+                <Box sx={{
+                  background: 'linear-gradient(90deg, #3a8bfd 0%, #1e40af 100%)',
+                  py: 3,
+                  px: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 3,
+                }}>
+                  <Box sx={{ position: 'relative', width: 80, height: 80 }}>
+                    <CircularProgress
+                      variant="determinate"
+                      value={progress}
+                      size={80}
+                      thickness={5}
+                      sx={{ color: '#fff', position: 'absolute', top: 0, left: 0 }}
+                    />
+                    <Box sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: 80,
+                      height: 80,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <Typography variant="h6" color="#fff" fontWeight={800}>
+                        {Math.round(progress)}%
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Typography variant="h6" color="#fff" fontWeight={800}>
+                      My Journey
+                    </Typography>
+                    <Typography color="#e0e7ef" fontSize={14}>
+                      Goal: {mockJourney.goal}
+                    </Typography>
+                    <Typography color="#e0e7ef" fontSize={14}>
+                      Points: <b>{mockJourney.points}</b>
+                    </Typography>
+                  </Box>
+                </Box>
+                <CardContent>
+                  {todayTask ? (
+                    <Box>
+                      <Typography variant="subtitle1" fontWeight={700} color="primary" mb={1}>
+                        Today’s Task
+                      </Typography>
+                      <Typography mb={2}>{todayTask.desc}</Typography>
+                      <Typography variant="body2" color="text.secondary" mb={2}>
+                        Due: {todayTask.due}
+                      </Typography>
+                      <Box display="flex" gap={2}>
+                        <Button variant="contained" color="success" startIcon={<CheckCircleIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
+                          Mark as Done
+                        </Button>
+                        <Button variant="outlined" color="warning" startIcon={<SkipNextIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
+                          Skip
+                        </Button>
+                        <Button variant="outlined" color="info" startIcon={<FeedbackIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
+                          Feedback
+                        </Button>
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Typography>No task for today. Enjoy your progress!</Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {/* Leaderboard Card */}
+              <Card sx={{ borderRadius: 4, boxShadow: 6, p: 0, overflow: 'hidden', mb: 3 }}>
+                <Box sx={{
+                  background: 'linear-gradient(90deg, #fbbf24 0%, #f59e42 100%)',
+                  py: 3,
+                  px: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                }}>
+                  <EmojiEventsIcon sx={{ fontSize: 40, color: '#fff' }} />
+                  <Typography variant="h6" color="#fff" fontWeight={800}>
+                    Leaderboard
+                  </Typography>
+                </Box>
+                <CardContent>
+                  {mockLeaderboard.map((user, idx) => (
+                    <Box key={user.name} display="flex" alignItems="center" gap={2} mb={1}>
+                      <Typography fontWeight={700} color={user.name === 'You' ? 'primary' : 'text.primary'}>
+                        {idx + 1}.
+                      </Typography>
+                      <Typography fontWeight={700} color={user.name === 'You' ? 'primary' : 'text.primary'}>
+                        {user.name}
+                      </Typography>
+                      <Typography color="text.secondary">Points: {user.points}</Typography>
+                      <Typography color="text.secondary">Milestones: {user.milestones}</Typography>
+                      {user.name === 'You' && <EmojiEventsIcon color="primary" fontSize="small" sx={{ ml: 1 }} />}
+                    </Box>
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+            {/* Existing features/cards */}
             {features.map((feature, idx) => (
               <Grid item xs={12} sm={6} md={4} key={feature.title}>
                 <Card sx={{ borderRadius: 4, boxShadow: 2, minHeight: 180, position: 'relative', p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
