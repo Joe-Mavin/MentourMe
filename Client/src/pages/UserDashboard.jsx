@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Sidebar from '../components/dashboard/sidebar'
 import {
   Box,
@@ -15,6 +15,8 @@ import {
   Hidden,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import axios from 'axios';
+import { ENDPOINTS } from '../config/environment';
 
 const features = [
   {
@@ -40,6 +42,52 @@ const features = [
 ]
 
 const drawerWidth = 260
+
+export const ProfilePage = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get(ENDPOINTS.AUTH.PROFILE, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(res.data.user);
+      } catch (err) {
+        setError('Failed to load profile');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  return (
+    <Box minHeight="100vh" display="flex" alignItems="center" justifyContent="center" bgcolor="background.default" px={2}>
+      <Card sx={{ maxWidth: 400, width: '100%', borderRadius: 4, boxShadow: 3, p: { xs: 1, sm: 2 } }}>
+        <CardContent>
+          <Typography variant="h4" fontWeight={800} color="primary" mb={2} textAlign="center">
+            Profile
+          </Typography>
+          {loading && <Typography>Loading...</Typography>}
+          {error && <Typography color="error">{error}</Typography>}
+          {user && (
+            <Box display="flex" flexDirection="column" gap={2}>
+              <Typography><strong>Name:</strong> {user.name}</Typography>
+              <Typography><strong>Email:</strong> {user.email}</Typography>
+              <Typography><strong>Phone:</strong> {user.phone}</Typography>
+              <Typography><strong>Onboarded:</strong> {user.onboarded ? 'Yes' : 'No'}</Typography>
+              <Typography variant="body2" color="text.secondary">Joined: {new Date(user.createdAt).toLocaleDateString()}</Typography>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+    </Box>
+  );
+};
 
 const UserDashboard = () => {
   const theme = useTheme()

@@ -5,7 +5,7 @@ import LandingPage from "./pages/landing-page";
 import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate } from "react-router-dom";
 import SignUpPage from "./pages/UserSignUp";
 import LoginPage from "./pages/loginPage";
-import UserDashboard from "./pages/UserDashboard";
+import UserDashboard, { ProfilePage } from "./pages/UserDashboard";
 import OnboardingContainer from "./components/Bot/Onboarding/OnboardingContainer";
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
@@ -51,6 +51,14 @@ function App() {
           element={
             <ProtectedRoute requireOnboarded={true}>
               <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute requireOnboarded={true}>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />

@@ -8,7 +8,9 @@ const SidebarItem = ({ icon, label, route }) => {
 
   const handleClick = () => {
     setToggleIcon(!toggleIcon); // Toggle state
-    navigate(route); // Navigate to the specified route
+    if (route) {
+      navigate(route); // Navigate to the specified route
+    }
   };
 
   return (
