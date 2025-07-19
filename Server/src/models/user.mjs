@@ -37,6 +37,4 @@ const User = sequelize.define("User", {
   timestamps: true, // Adds createdAt & updatedAt automatically
 });
 
-User.hasMany(Journey, { foreignKey: 'userId', as: 'journeys' });
-
 export default User;

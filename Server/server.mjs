@@ -5,6 +5,10 @@ import authRoutes from "./src/routes/authroutes.mjs";
 import botRoutes from "./src/routes/botroutes.mjs"
 import userRoutes from "./src/routes/user.routes.mjs";
 import cors from "cors";
+import './src/models/user.mjs';
+import './src/models/journey.mjs';
+import './src/models/task.mjs';
+import './src/models/associations.mjs';
 
 dotenv.config();
 
@@ -43,9 +47,9 @@ console.log("Loaded DB_NAME:", process.env.DB_NAME);
 
 // Sync database & start server
 const PORT = process.env.PORT || 5001;
-sequelize.sync()
+sequelize.sync({ alter: true })
   .then(() => {
-    console.log("Database connected ✅");
+    console.log("Database updated (sync with alter) ✅");
     app.listen(PORT, "localhost", () => console.log(`Server running on all interfaces (0.0.0.0:5001)`));
   })
   .catch((err) => console.error("DB Connection Error ❌", err));

@@ -39,12 +39,6 @@ const Journey = sequelize.define("Journey", {
   timestamps: true,
 });
 
-// Associations
-import Task from "./task.mjs";
-import User from "./user.mjs";
-Journey.hasMany(Task, { foreignKey: 'journeyId', as: 'tasks' });
-Task.belongsTo(Journey, { foreignKey: 'journeyId', as: 'journey' });
-Journey.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-Task.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+// Remove all association code from this file.
 
 export default Journey; 
