@@ -79,6 +79,7 @@ export const generateJourney = async (req, res) => {
       description: t.description,
       dueDate: new Date(new Date(startDate).getTime() + i * 24 * 60 * 60 * 1000),
       status: 'pending',
+      // reason is not stored in DB, but we keep it in memory for API response
     }));
     try {
       await Task.bulkCreate(dbTasks);
@@ -87,7 +88,14 @@ export const generateJourney = async (req, res) => {
       return res.status(500).json({ message: 'Failed to create tasks', error: err.message });
     }
 
-    res.status(201).json({ message: 'Journey generated', journeyId: journey.id });
+    // Include reasons in the response for future therapist dashboard use
+    const tasksWithReason = validTasks.map((t, i) => ({
+      day: i + 1,
+      description: t.description,
+      reason: t.reason || null
+    }));
+
+    res.status(201).json({ message: 'Journey generated', journeyId: journey.id, goal, tasks: tasksWithReason });
   } catch (error) {
     console.error("Generate journey error:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });

@@ -27,12 +27,13 @@ ${focusNote}
 ${addictionNote}
 ${socialNote}
 Use evidence-based psychological methods (such as CBT, habit stacking, SMART goals, positive psychology, and behavioral activation) to create a sequence of daily tasks that build on each other for real, lasting change.
-Each task should be:
-- Specific, actionable, and achievable in a day
-- Directly relevant to the user's stated goals, confidence levels, time availability, and any challenges (e.g., addiction, social life)
-- Progressively more challenging or rewarding
-- Written in a motivating, supportive tone
-- Include a mix of reflection, action, and social/behavioral components
+
+For each daily task:
+- Make it unique, practical, and directly relevant to the user's goals and challenges.
+- Avoid generic advice; tailor each task to the user's context and previous tasks.
+- Vary the type of task (reflection, action, social, habit, etc.) across the 21 days.
+- Ensure a logical progression: start simple, increase challenge or depth over time.
+- Include a 1-sentence rationale for each task (as a 'reason' field) explaining why it is useful.
 
 User Data:
 - Name: ${name}
@@ -47,9 +48,9 @@ Respond ONLY in valid JSON (no explanation, no markdown):
 {
   "goal": "A concise, inspiring summary of the main growth goal for this user.",
   "tasks": [
-    { "description": "Day 1: ..." },
-    { "description": "Day 2: ..." },
-    ... (21 tasks total, one for each day)
+    { "description": "Day 1: ...", "reason": "Why this is useful" },
+    { "description": "Day 2: ...", "reason": "Why this is useful" }
+    // ... (21 tasks total)
   ]
 }
 `;
