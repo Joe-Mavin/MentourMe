@@ -104,17 +104,31 @@ Respond ONLY in valid JSON (no explanation, no markdown):
     result = JSON.parse(cleanText);
   } catch (err) {
     // Try to recover from truncated JSON by trimming to last complete bracket
-    const lastBrace = cleanText.lastIndexOf('}');
-    if (lastBrace !== -1) {
-      try {
-        result = JSON.parse(cleanText.slice(0, lastBrace + 1));
-      } catch (err2) {
-        console.error('Failed to parse AI response (after recovery attempt):', cleanText);
-        throw new Error('Failed to parse AI response: ' + cleanText);
-      }
-    } else {
-      console.error('Failed to parse AI response:', cleanText);
-      throw new Error('Failed to parse AI response: ' + cleanText);
+    let attempt = cleanText;
+    let lastBrace = attempt.lastIndexOf('}');
+    if (lastBrace !== -1 && lastBrace < attempt.length - 1) {
+      attempt = attempt.slice(0, lastBrace + 1);
+    }
+    // Remove trailing commas before closing brackets (common AI mistake)
+    attempt = attempt.replace(/,\s*([}\]])/g, '$1');
+    // If still missing closing brackets, try to auto-close
+    let openBraces = (attempt.match(/{/g) || []).length;
+    let closeBraces = (attempt.match(/}/g) || []).length;
+    let openBrackets = (attempt.match(/\[/g) || []).length;
+    let closeBrackets = (attempt.match(/\]/g) || []).length;
+    while (closeBraces < openBraces) {
+      attempt += '}';
+      closeBraces++;
+    }
+    while (closeBrackets < openBrackets) {
+      attempt += ']';
+      closeBrackets++;
+    }
+    try {
+      result = JSON.parse(attempt);
+    } catch (err2) {
+      console.error('Failed to parse AI response (after advanced recovery):', attempt);
+      throw new Error('Failed to parse AI response: ' + attempt);
     }
   }
   return result;
