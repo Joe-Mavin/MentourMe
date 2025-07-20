@@ -86,17 +86,35 @@ Respond ONLY in valid JSON (no explanation, no markdown):
     throw new Error('No response from OpenRouter');
   }
 
-  // Remove code block markers if present
-  let cleanText = responseText.trim();
-  if (cleanText.startsWith('```')) {
-    cleanText = cleanText.replace(/^```[a-zA-Z]*\n?/, '').replace(/```$/, '').trim();
-  }
+  // Log the raw AI response for debugging
+  console.log('Raw AI response:', responseText);
 
+  // Remove all code block markers and leading/trailing whitespace
+  let cleanText = responseText.trim()
+    .replace(/^```[a-zA-Z]*\n?/, '') // Remove opening code block (with or without language)
+    .replace(/```$/, '') // Remove closing code block
+    .replace(/\n```\s*$/, '') // Remove closing code block with newline
+    .replace(/\r?\n?```[a-zA-Z]*\r?\n?/g, '') // Remove any stray code block markers
+    .trim();
+
+  // Attempt to parse JSON, handle incomplete/truncated JSON
+  let result;
   try {
-    const result = JSON.parse(cleanText);
-    return result;
+    result = JSON.parse(cleanText);
   } catch (err) {
-    console.error('Failed to parse AI response:', cleanText);
-    throw new Error('Failed to parse AI response: ' + cleanText);
+    // Try to recover from truncated JSON by trimming to last complete bracket
+    const lastBrace = cleanText.lastIndexOf('}');
+    if (lastBrace !== -1) {
+      try {
+        result = JSON.parse(cleanText.slice(0, lastBrace + 1));
+      } catch (err2) {
+        console.error('Failed to parse AI response (after recovery attempt):', cleanText);
+        throw new Error('Failed to parse AI response: ' + cleanText);
+      }
+    } else {
+      console.error('Failed to parse AI response:', cleanText);
+      throw new Error('Failed to parse AI response: ' + cleanText);
+    }
   }
+  return result;
 } 
