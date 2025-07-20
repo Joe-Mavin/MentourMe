@@ -46,11 +46,17 @@ export async function generateJourneyWithAI(onboardingData) {
     throw new Error('No response from OpenRouter');
   }
 
+  // Remove code block markers if present
+  let cleanText = responseText.trim();
+  if (cleanText.startsWith('```')) {
+    cleanText = cleanText.replace(/^```[a-zA-Z]*\n?/, '').replace(/```$/, '').trim();
+  }
+
   try {
-    const result = JSON.parse(responseText);
+    const result = JSON.parse(cleanText);
     return result;
   } catch (err) {
-    console.error('Failed to parse AI response:', responseText);
-    throw new Error('Failed to parse AI response: ' + responseText);
+    console.error('Failed to parse AI response:', cleanText);
+    throw new Error('Failed to parse AI response: ' + cleanText);
   }
 } 
