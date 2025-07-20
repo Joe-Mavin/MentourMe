@@ -125,11 +125,32 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
       attempt += ']';
       closeBrackets++;
     }
+    // If still fails, try to remove the last incomplete task from the tasks array
     try {
       result = JSON.parse(attempt);
     } catch (err2) {
-      console.error('Failed to parse AI response (after advanced recovery):', attempt);
-      throw new Error('Failed to parse AI response: ' + attempt);
+      // Try to remove the last incomplete task (if tasks array is present)
+      const tasksArrayMatch = attempt.match(/("tasks"\s*:\s*\[)([\s\S]*)\]/);
+      if (tasksArrayMatch) {
+        let tasksContent = tasksArrayMatch[2];
+        // Remove the last comma and everything after it (likely the incomplete task)
+        let lastComma = tasksContent.lastIndexOf(',');
+        if (lastComma !== -1) {
+          let fixed = attempt.replace(/("tasks"\s*:\s*\[)[\s\S]*\]/, `$1${tasksContent.slice(0, lastComma)}]`);
+          try {
+            result = JSON.parse(fixed);
+          } catch (err3) {
+            console.error('Failed to parse AI response (after removing last incomplete task):', fixed);
+            throw new Error('Failed to parse AI response: ' + fixed);
+          }
+        } else {
+          console.error('Failed to parse AI response (no recoverable tasks):', attempt);
+          throw new Error('Failed to parse AI response: ' + attempt);
+        }
+      } else {
+        console.error('Failed to parse AI response (after advanced recovery):', attempt);
+        throw new Error('Failed to parse AI response: ' + attempt);
+      }
     }
   }
   return result;
