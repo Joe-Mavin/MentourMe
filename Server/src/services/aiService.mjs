@@ -108,6 +108,25 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
   }
   // END PATCH
 
+  // PATCH: Remove trailing commas before closing brackets
+  cleanText = cleanText.replace(/,\s*([}\]])/g, '$1');
+  // END PATCH
+
+  // PATCH: Auto-close any missing brackets/braces
+  let openBraces = (cleanText.match(/{/g) || []).length;
+  let closeBraces = (cleanText.match(/}/g) || []).length;
+  let openBrackets = (cleanText.match(/\[/g) || []).length;
+  let closeBrackets = (cleanText.match(/\]/g) || []).length;
+  while (closeBraces < openBraces) {
+    cleanText += '}';
+    closeBraces++;
+  }
+  while (closeBrackets < openBrackets) {
+    cleanText += ']';
+    closeBrackets++;
+  }
+  // END PATCH
+
   // Attempt to parse JSON, handle incomplete/truncated JSON
   let result;
   try {
