@@ -22,7 +22,7 @@ export async function generateJourneyWithAI(onboardingData) {
     : '';
 
   const prompt = `
-Return exactly 14 tasks. Do not return more than 14 tasks. Respond ONLY in valid JSON.
+RETURN EXACTLY 14 TASKS. DO NOT RETURN MORE THAN 14 TASKS. RESPOND ONLY IN VALID JSON.
 
 You are a world-class professional mentor and psychologist AI. Your job is to design a 14-day personal growth journey for a user based on their onboarding data.
 ${focusNote}
@@ -54,6 +54,8 @@ User Data:
     // ... (exactly 14 tasks)
   ]
 }
+
+REMEMBER: RETURN EXACTLY 14 TASKS. DO NOT RETURN MORE THAN 14 TASKS. RESPOND ONLY IN VALID JSON.
 `;
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
