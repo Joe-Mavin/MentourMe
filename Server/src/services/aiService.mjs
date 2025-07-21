@@ -173,16 +173,19 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
             result = JSON.parse(fixed);
           } catch (err3) {
             console.error('Failed to parse AI response (after removing last incomplete task):', fixed);
+            console.error('Final fallback: returning mock tasks. Last cleaned text:', cleanText);
             // Final fallback: return a safe object
             return { goal: 'Personal Development', tasks: [] };
           }
         } else {
           console.error('Failed to parse AI response (no recoverable tasks):', attempt);
+          console.error('Final fallback: returning mock tasks. Last cleaned text:', cleanText);
           // Final fallback: return a safe object
           return { goal: 'Personal Development', tasks: [] };
         }
       } else {
         console.error('Failed to parse AI response (after advanced recovery):', attempt);
+        console.error('Final fallback: returning mock tasks. Last cleaned text:', cleanText);
         // Final fallback: return a safe object
         return { goal: 'Personal Development', tasks: [] };
       }
