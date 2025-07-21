@@ -33,8 +33,7 @@ For each daily task:
 - Avoid generic advice; tailor each task to the user's context and previous tasks.
 - Vary the type of task (reflection, action, social, habit, etc.) across the 21 days.
 - Ensure a logical progression: start simple, increase challenge or depth over time.
-- Include a 1-sentence rationale for each task (as a 'reason' field) explaining why it is useful.
-- Each task and reason should be no more than 1-2 sentences.
+- Each task description should be no more than 1-2 sentences.
 
 User Data:
 - Name: ${name}
@@ -49,8 +48,8 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
 {
   "goal": "A concise, inspiring summary of the main growth goal for this user.",
   "tasks": [
-    { "description": "Day 1: ...", "reason": "Why this is useful" },
-    { "description": "Day 2: ...", "reason": "Why this is useful" }
+    { "description": "Day 1: ..." },
+    { "description": "Day 2: ..." }
     // ... (up to 21 tasks)
   ]
 }
