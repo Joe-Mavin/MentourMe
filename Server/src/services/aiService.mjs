@@ -64,7 +64,7 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
       'X-Title': 'MentourMe AI Journey'
     },
     body: JSON.stringify({
-      model: 'deepseek/deepseek-r1-0528-qwen3-8b:free',
+      model: 'qwen/qwen3-30b-a3b:free',
       messages: [
         { role: 'system', content: 'You are a helpful, professional mentor AI.' },
         { role: 'user', content: prompt }
