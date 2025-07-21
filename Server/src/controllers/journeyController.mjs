@@ -23,6 +23,7 @@ function generateMockTasks(goal, startDate, userId, journeyId) {
     description: desc,
     dueDate: new Date(baseDate.getTime() + i * 24 * 60 * 60 * 1000),
     status: 'pending',
+    reason: 'No reason provided.'
   }));
 }
 
@@ -79,7 +80,7 @@ export const generateJourney = async (req, res) => {
       description: t.description,
       dueDate: new Date(new Date(startDate).getTime() + i * 24 * 60 * 60 * 1000),
       status: 'pending',
-      // reason is not stored in DB, but we keep it in memory for API response
+      reason: t.reason || 'No reason provided.'
     }));
     try {
       await Task.bulkCreate(dbTasks);
@@ -92,7 +93,7 @@ export const generateJourney = async (req, res) => {
     const tasksWithReason = validTasks.map((t, i) => ({
       day: i + 1,
       description: t.description,
-      reason: t.reason || null
+      reason: t.reason || 'No reason provided.'
     }));
 
     res.status(201).json({ message: 'Journey generated', journeyId: journey.id, goal, tasks: tasksWithReason });
@@ -121,7 +122,16 @@ export const getJourney = async (req, res) => {
     if (!journey) {
       return res.status(404).json({ message: 'No active journey found' });
     }
-    res.status(200).json({ journey });
+    // Map DB tasks to include reason in response
+    const tasksWithReason = (journey.tasks || []).map(task => ({
+      id: task.id,
+      day: task.day,
+      description: task.description,
+      reason: task.reason || 'No reason provided.',
+      status: task.status,
+      dueDate: task.dueDate
+    }));
+    res.status(200).json({ journey: { ...journey.toJSON(), tasks: tasksWithReason } });
   } catch (error) {
     console.error("Get journey error:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });

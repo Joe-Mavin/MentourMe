@@ -35,6 +35,10 @@ const Task = sequelize.define("Task", {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  reason: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
 }, {
   timestamps: true,
 });
