@@ -99,6 +99,15 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
     .replace(/\r?\n?```[a-zA-Z]*\r?\n?/g, '') // Remove any stray code block markers
     .trim();
 
+  // PATCH: Trim to last complete closing bracket to handle truncated AI responses
+  let lastArrayClose = cleanText.lastIndexOf(']');
+  let lastObjectClose = cleanText.lastIndexOf('}');
+  let trimIndex = Math.max(lastArrayClose, lastObjectClose);
+  if (trimIndex !== -1 && trimIndex < cleanText.length - 1) {
+    cleanText = cleanText.slice(0, trimIndex + 1);
+  }
+  // END PATCH
+
   // Attempt to parse JSON, handle incomplete/truncated JSON
   let result;
   try {
