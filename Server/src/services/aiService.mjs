@@ -22,6 +22,8 @@ export async function generateJourneyWithAI(onboardingData) {
     : '';
 
   const prompt = `
+Return exactly 14 tasks. Do not return more than 14 tasks. Respond ONLY in valid JSON.
+
 You are a world-class professional mentor and psychologist AI. Your job is to design a 14-day personal growth journey for a user based on their onboarding data.
 ${focusNote}
 ${addictionNote}
@@ -44,13 +46,12 @@ User Data:
 - Addiction: ${addiction || 'None'}
 - Social Life Categories: ${socialLifeCategories && socialLifeCategories.length ? socialLifeCategories.join(', ') : 'N/A'}
 
-Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 14 tasks, return as many as possible in a valid JSON array.
 {
   "goal": "A concise, inspiring summary of the main growth goal for this user.",
   "tasks": [
     { "description": "Day 1: ..." },
     { "description": "Day 2: ..." }
-    // ... (up to 14 tasks)
+    // ... (exactly 14 tasks)
   ]
 }
 `;
