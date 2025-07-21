@@ -22,7 +22,7 @@ export async function generateJourneyWithAI(onboardingData) {
     : '';
 
   const prompt = `
-You are a world-class professional mentor and psychologist AI. Your job is to design a 21-day personal growth journey for a user based on their onboarding data.
+You are a world-class professional mentor and psychologist AI. Your job is to design a 14-day personal growth journey for a user based on their onboarding data.
 ${focusNote}
 ${addictionNote}
 ${socialNote}
@@ -31,7 +31,7 @@ Use evidence-based psychological methods (such as CBT, habit stacking, SMART goa
 For each daily task:
 - Make it unique, practical, and directly relevant to the user's goals and challenges.
 - Avoid generic advice; tailor each task to the user's context and previous tasks.
-- Vary the type of task (reflection, action, social, habit, etc.) across the 21 days.
+- Vary the type of task (reflection, action, social, habit, etc.) across the 14 days.
 - Ensure a logical progression: start simple, increase challenge or depth over time.
 - Each task description should be no more than 1-2 sentences.
 
@@ -44,13 +44,13 @@ User Data:
 - Addiction: ${addiction || 'None'}
 - Social Life Categories: ${socialLifeCategories && socialLifeCategories.length ? socialLifeCategories.join(', ') : 'N/A'}
 
-Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 21 tasks, return as many as possible in a valid JSON array.
+Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 14 tasks, return as many as possible in a valid JSON array.
 {
   "goal": "A concise, inspiring summary of the main growth goal for this user.",
   "tasks": [
     { "description": "Day 1: ..." },
     { "description": "Day 2: ..." }
-    // ... (up to 21 tasks)
+    // ... (up to 14 tasks)
   ]
 }
 `;
