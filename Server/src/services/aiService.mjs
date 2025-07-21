@@ -99,6 +99,18 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
     .replace(/\r?\n?```[a-zA-Z]*\r?\n?/g, '') // Remove any stray code block markers
     .trim();
 
+  // --- PATCH: Inject missing 'reason' fields before parsing ---
+  cleanText = cleanText.replace(
+    /({\s*"description"\s*:\s*"[^"]*"\s*})/g,
+    (match) => {
+      // If 'reason' is already present, do nothing
+      if (/"reason"\s*:/.test(match)) return match;
+      // Otherwise, add a default reason
+      return match.replace(/}$/, ', "reason": "No reason provided."}');
+    }
+  );
+  // --- END PATCH ---
+
   // Attempt to parse JSON, handle incomplete/truncated JSON
   let result;
   try {
