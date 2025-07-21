@@ -116,6 +116,8 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
   try {
     result = JSON.parse(cleanText);
   } catch (err) {
+    console.error('AI response JSON.parse error:', err);
+    console.error('Cleaned AI response text:', cleanText);
     // Try to recover from truncated JSON by trimming to last complete bracket
     let attempt = cleanText;
     let lastBrace = attempt.lastIndexOf('}');
@@ -141,6 +143,8 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
     try {
       result = JSON.parse(attempt);
     } catch (err2) {
+      console.error('AI response advanced recovery error:', err2);
+      console.error('Advanced recovery attempt text:', attempt);
       // Try to remove the last incomplete task (if tasks array is present)
       const tasksArrayMatch = attempt.match(/("tasks"\s*:\s*\[)([\s\S]*)\]/);
       if (tasksArrayMatch) {
@@ -153,15 +157,18 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
             result = JSON.parse(fixed);
           } catch (err3) {
             console.error('Failed to parse AI response (after removing last incomplete task):', fixed);
-            throw new Error('Failed to parse AI response: ' + fixed);
+            // Final fallback: return a safe object
+            return { goal: 'Personal Development', tasks: [] };
           }
         } else {
           console.error('Failed to parse AI response (no recoverable tasks):', attempt);
-          throw new Error('Failed to parse AI response: ' + attempt);
+          // Final fallback: return a safe object
+          return { goal: 'Personal Development', tasks: [] };
         }
       } else {
         console.error('Failed to parse AI response (after advanced recovery):', attempt);
-        throw new Error('Failed to parse AI response: ' + attempt);
+        // Final fallback: return a safe object
+        return { goal: 'Personal Development', tasks: [] };
       }
     }
   }
