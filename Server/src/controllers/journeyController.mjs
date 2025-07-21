@@ -22,8 +22,7 @@ function generateMockTasks(goal, startDate, userId, journeyId) {
     day: i + 1,
     description: desc,
     dueDate: new Date(baseDate.getTime() + i * 24 * 60 * 60 * 1000),
-    status: 'pending',
-    reason: 'No reason provided.'
+    status: 'pending'
   }));
 }
 
@@ -79,8 +78,7 @@ export const generateJourney = async (req, res) => {
       day: i + 1,
       description: t.description,
       dueDate: new Date(new Date(startDate).getTime() + i * 24 * 60 * 60 * 1000),
-      status: 'pending',
-      reason: t.reason || 'No reason provided.'
+      status: 'pending'
     }));
     try {
       await Task.bulkCreate(dbTasks);
@@ -89,14 +87,13 @@ export const generateJourney = async (req, res) => {
       return res.status(500).json({ message: 'Failed to create tasks', error: err.message });
     }
 
-    // Include reasons in the response for future therapist dashboard use
-    const tasksWithReason = validTasks.map((t, i) => ({
+    // Remove reasons from the response
+    const tasksWithDescription = validTasks.map((t, i) => ({
       day: i + 1,
-      description: t.description,
-      reason: t.reason || 'No reason provided.'
+      description: t.description
     }));
 
-    res.status(201).json({ message: 'Journey generated', journeyId: journey.id, goal, tasks: tasksWithReason });
+    res.status(201).json({ message: 'Journey generated', journeyId: journey.id, goal, tasks: tasksWithDescription });
   } catch (error) {
     console.error("Generate journey error:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });
@@ -122,16 +119,15 @@ export const getJourney = async (req, res) => {
     if (!journey) {
       return res.status(404).json({ message: 'No active journey found' });
     }
-    // Map DB tasks to include reason in response
-    const tasksWithReason = (journey.tasks || []).map(task => ({
+    // Map DB tasks to only include description and other essentials
+    const tasksWithDescription = (journey.tasks || []).map(task => ({
       id: task.id,
       day: task.day,
       description: task.description,
-      reason: task.reason || 'No reason provided.',
       status: task.status,
       dueDate: task.dueDate
     }));
-    res.status(200).json({ journey: { ...journey.toJSON(), tasks: tasksWithReason } });
+    res.status(200).json({ journey: { ...journey.toJSON(), tasks: tasksWithDescription } });
   } catch (error) {
     console.error("Get journey error:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });
