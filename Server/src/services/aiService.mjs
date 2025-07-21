@@ -153,5 +153,19 @@ Respond ONLY in valid JSON (no explanation, no markdown). If you cannot fit all 
       }
     }
   }
+
+  // --- PATCH: Ensure every task has both description and reason, and filter incomplete tasks ---
+  if (result && Array.isArray(result.tasks)) {
+    result.tasks = result.tasks.filter(
+      t => t && typeof t.description === 'string' && t.description.trim().length > 0
+    ).map(
+      t => ({
+        description: t.description,
+        reason: typeof t.reason === 'string' && t.reason.trim().length > 0 ? t.reason : 'No reason provided.'
+      })
+    );
+  }
+  // --- END PATCH ---
+
   return result;
 } 
