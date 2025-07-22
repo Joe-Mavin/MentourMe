@@ -604,7 +604,6 @@ const UserDashboard = () => {
               </Grid>
             ))}
           </Grid>
-        </Container>
         {/* Snackbar for feedback */}
         <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
           <MuiAlert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }} elevation={6} variant="filled">
