@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import { Box, Typography, Button, Grid, useTheme } from "@mui/material";
 import {
@@ -16,6 +16,7 @@ import SignUpPage from "./UserSignUp";
 
 const LandingPage = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   // Slider settings
   const sliderSettings = {
     dots: true,
@@ -44,17 +45,33 @@ const LandingPage = () => {
         <Typography variant="h5" fontWeight={900} color="primary" sx={{ letterSpacing: 2 }}>
           MentourMe
         </Typography>
-        <Link to='/login'>
+        {/* Role selection buttons */}
+        <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
-            size="large"
-            startIcon={<FaSignInAlt />}
+            onClick={() => { localStorage.setItem('selectedRole', 'user'); navigate('/login'); }}
             sx={{ borderRadius: 3, fontWeight: 700 }}
           >
-            Log In
+            Continue as User
           </Button>
-        </Link>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => { localStorage.setItem('selectedRole', 'mentor'); navigate('/login'); }}
+            sx={{ borderRadius: 3, fontWeight: 700 }}
+          >
+            Continue as Mentor
+          </Button>
+          <Button
+            variant="outlined"
+            color="success"
+            onClick={() => { localStorage.setItem('selectedRole', 'therapist'); navigate('/login'); }}
+            sx={{ borderRadius: 3, fontWeight: 700 }}
+          >
+            Continue as Therapist
+          </Button>
+        </Box>
       </Box>
 
       {/* Hero Section with Background Video */}
