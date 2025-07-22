@@ -338,8 +338,9 @@ const UserDashboard = () => {
   }
   const progress = journey ? (journey.completedTasks / journey.totalTasks) * 100 : 0;
 
-  // Get current user name from localStorage (if available)
+  // Get current user name and role from localStorage
   const currentUser = localStorage.getItem('name');
+  const currentUserRole = localStorage.getItem('role');
 
   // Snackbar close handler
   const handleSnackbarClose = (event, reason) => {
@@ -347,50 +348,84 @@ const UserDashboard = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: theme.palette.background.default }}>
-      {/* AppBar for mobile */}
-      <Hidden mdUp>
-        <AppBar position="fixed" color="transparent" elevation={0} sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
-          <Toolbar>
-            <IconButton color="inherit" edge="start" onClick={() => setMobileOpen(!mobileOpen)} sx={{ mr: 2 }} aria-label="Open sidebar menu">
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" fontWeight={900} color="primary" sx={{ flexGrow: 1, letterSpacing: 2 }}>
-              MentourMe
-            </Typography>
-          </Toolbar>
-        </AppBar>
+      <AppBar
+        position="fixed"
+        sx={{
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+          bgcolor: theme.palette.primary.main,
+          zIndex: theme.zIndex.drawer + 1
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+            Welcome, {currentUser || 'User'}!
+          </Typography>
+          {/* Navigation for different roles */}
+          {currentUserRole === 'mentor' && (
+            <Button color="inherit" href="/mentor-dashboard">
+              Mentor Dashboard
+            </Button>
+          )}
+          {currentUserRole === 'therapist' && (
+            <Button color="inherit" href="/therapist-dashboard">
+              Therapist Dashboard
+            </Button>
+          )}
+          {/* Example: A generic profile link always visible */}
+          <Button color="inherit" href="/profile">
+            Profile
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Hidden smUp implementation="css">
         <Drawer
           variant="temporary"
           open={mobileOpen}
-          onClose={() => setMobileOpen(false)}
+          onClose={handleDrawerToggle}
           ModalProps={{ keepMounted: true }}
           sx={{
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-              bgcolor: theme.palette.background.paper,
-            },
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
-          <Sidebar />
+          <Sidebar handleDrawerToggle={handleDrawerToggle} />
         </Drawer>
       </Hidden>
-      {/* Sidebar for desktop */}
-      <Hidden mdDown>
-        <Box sx={{ width: drawerWidth, flexShrink: 0 }}>
-          <Sidebar />
-        </Box>
+      <Hidden smDown implementation="css">
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+          open
+        >
+          <Sidebar handleDrawerToggle={handleDrawerToggle} />
+        </Drawer>
       </Hidden>
-      {/* Main Content */}
-      <Box component="main" sx={{ flexGrow: 1, width: '100%' }}>
-        {/* Add top spacing for mobile AppBar */}
-        <Hidden mdUp>
-          <Toolbar />
-        </Hidden>
-        <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
-          <Grid container spacing={3}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 8 }}
+      >
+        {/* Main content of the dashboard */}
+        {/* Existing content for user dashboard... */}
+        <Grid container spacing={4} sx={{ mt: 4 }}>
             <Grid item xs={12} md={6}>
               {/* My Journey Card */}
               <Card sx={{ borderRadius: 4, boxShadow: 6, p: 0, overflow: 'hidden', mb: 3 }}>

@@ -51,6 +51,7 @@ export const login = async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name,
+        role: user.role, // Include user role in JWT payload
       },
       process.env.SECRET_KEY,
       { expiresIn: "2h" }
@@ -60,6 +61,7 @@ export const login = async (req, res) => {
       message: "Login successful",
       token, // Send token to frontend
       onboarded: user.onboarded, // Send onboarding status
+      role: user.role, // Send user role to frontend
     });
   } catch (error) {
     console.error("Login error:", error);

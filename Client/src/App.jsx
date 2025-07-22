@@ -7,16 +7,31 @@ import SignUpPage from "./pages/UserSignUp";
 import LoginPage from "./pages/loginPage";
 import UserDashboard, { ProfilePage, JourneyPage } from "./pages/UserDashboard";
 import OnboardingContainer from "./components/Bot/Onboarding/OnboardingContainer";
+import MentorDashboard from "./pages/MentorDashboard"; // Import MentorDashboard
+import TherapistDashboard from "./pages/TherapistDashboard"; // Import TherapistDashboard
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
 
-// ProtectedRoute checks for JWT and onboarding status
-function ProtectedRoute({ children, requireOnboarded }) {
+// ProtectedRoute checks for JWT, onboarding status, and user role
+function ProtectedRoute({ children, requireOnboarded, allowedRoles }) {
   const token = localStorage.getItem('token');
   const onboarded = localStorage.getItem('onboarded') === 'true';
+  const userRole = localStorage.getItem('role'); // Get user role from localStorage
+
   if (!token) return <Navigate to="/login" replace />;
+
+  // Handle onboarding redirects
   if (requireOnboarded && !onboarded) return <Navigate to="/onboard" replace />;
-  if (!requireOnboarded && onboarded) return <Navigate to="/dashboard" replace />;
+  if (!requireOnboarded && onboarded && userRole === 'user') return <Navigate to="/dashboard" replace />;
+
+  // Handle role-based redirects
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
+    // Redirect non-authorized roles to their respective dashboards or default
+    if (userRole === 'mentor') return <Navigate to="/mentor-dashboard" replace />;
+    if (userRole === 'therapist') return <Navigate to="/therapist-dashboard" replace />;
+    return <Navigate to="/dashboard" replace />; // Default redirect for users
+  }
+
   return children;
 }
 
@@ -41,7 +56,7 @@ function App() {
         <Route
           path="/onboard"
           element={
-            <ProtectedRoute requireOnboarded={false}>
+            <ProtectedRoute requireOnboarded={false} allowedRoles={['user']}>
               <OnboardingWithRedirect />
             </ProtectedRoute>
           }
@@ -49,7 +64,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute requireOnboarded={true}>
+            <ProtectedRoute requireOnboarded={true} allowedRoles={['user']}>
               <UserDashboard />
             </ProtectedRoute>
           }
@@ -57,7 +72,7 @@ function App() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute requireOnboarded={true}>
+            <ProtectedRoute requireOnboarded={true} allowedRoles={['user', 'mentor', 'therapist']}>
               <ProfilePage />
             </ProtectedRoute>
           }
@@ -65,8 +80,25 @@ function App() {
         <Route
           path="/journey"
           element={
-            <ProtectedRoute requireOnboarded={true}>
+            <ProtectedRoute requireOnboarded={true} allowedRoles={['user']}>
               <JourneyPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* New Mentor and Therapist Dashboards */}
+        <Route
+          path="/mentor-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['mentor']}>
+              <MentorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/therapist-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['therapist']}>
+              <TherapistDashboard />
             </ProtectedRoute>
           }
         />
