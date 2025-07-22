@@ -4,6 +4,7 @@ import sequelize from "./src/config/database.mjs";
 import authRoutes from "./src/routes/authroutes.mjs";
 import botRoutes from "./src/routes/botroutes.mjs"
 import userRoutes from "./src/routes/user.routes.mjs";
+import mentorRoutes from "./src/routes/mentorRoutes.mjs";
 import cors from "cors";
 import './src/models/user.mjs';
 import './src/models/journey.mjs';
@@ -41,6 +42,7 @@ app.use("/auth", authRoutes); // No /api prefix
 app.use("/api/bot", botRoutes);
 app.use("/bot",botRoutes)
 app.use("/api/users", userRoutes);
+app.use("/api/mentorship", mentorRoutes);
 
 console.log("Loaded DB_USER:", process.env.DB_USER);
 console.log("Loaded DB_NAME:", process.env.DB_NAME);
