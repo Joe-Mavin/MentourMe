@@ -33,6 +33,19 @@ const User = sequelize.define("User", {
     allowNull: false,
     defaultValue: false,
   },
+  role: {
+    type: DataTypes.ENUM('user', 'mentor', 'therapist'),
+    defaultValue: 'user',
+    allowNull: false,
+  },
+  bio: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  profilePicture: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }, {
   timestamps: true, // Adds createdAt & updatedAt automatically
 });

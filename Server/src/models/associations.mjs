@@ -1,6 +1,7 @@
 import User from './user.mjs';
 import Journey from './journey.mjs';
 import Task from './task.mjs';
+import Specialization from './specialization.mjs';
 
 // User <-> Journey
 User.hasMany(Journey, { foreignKey: 'userId', as: 'journeys' });
@@ -12,5 +13,8 @@ Task.belongsTo(Journey, { foreignKey: 'journeyId', as: 'journey' });
 
 // Task <-> User
 Task.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+User.belongsToMany(Specialization, { through: 'UserSpecialization', as: 'specializations', foreignKey: 'userId' });
+Specialization.belongsToMany(User, { through: 'UserSpecialization', as: 'users', foreignKey: 'specializationId' });
 
 export { User, Journey, Task }; 
