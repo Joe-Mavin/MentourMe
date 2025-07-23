@@ -12,6 +12,7 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const selectedRole = localStorage.getItem('selectedRole') || 'user';
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -40,11 +41,23 @@ const LoginPage = () => {
         localStorage.setItem("token", responseData.token);
         // Store onboarding status
         localStorage.setItem("onboarded", responseData.onboarded ? 'true' : 'false');
+        // Store user role
+        if (responseData.role) {
+          localStorage.setItem('role', responseData.role);
+        }
 
         // After successful login, check if the token is available
         const token = localStorage.getItem("token");
+        const userRole = responseData.role || 'user';
         if (token) {
-          navigate("/dashboard"); // Redirect to dashboard if token is found
+          // Redirect to the correct dashboard based on role
+          if (userRole === 'mentor') {
+            navigate('/mentor-dashboard');
+          } else if (userRole === 'therapist') {
+            navigate('/therapist-dashboard');
+          } else {
+            navigate('/dashboard');
+          }
         }
       }
     } catch (error) {
@@ -60,7 +73,7 @@ const LoginPage = () => {
       <Card sx={{ maxWidth: 400, width: '100%', borderRadius: 4, boxShadow: 3, p: { xs: 1, sm: 2 } }}>
         <CardContent>
           <Typography variant="h4" fontWeight={800} color="primary" mb={2} textAlign="center">
-            Log In to Your Account
+            {selectedRole === 'mentor' ? 'Mentor Login' : selectedRole === 'therapist' ? 'Therapist Login' : 'User Login'}
           </Typography>
           {errorMessage && <Typography color="error" mb={2} textAlign="center">{errorMessage}</Typography>}
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>
