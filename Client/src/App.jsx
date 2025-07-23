@@ -9,6 +9,7 @@ import UserDashboard, { ProfilePage, JourneyPage } from "./pages/UserDashboard";
 import OnboardingContainer from "./components/Bot/Onboarding/OnboardingContainer";
 import MentorDashboard from "./pages/MentorDashboard"; // Import MentorDashboard
 import TherapistDashboard from "./pages/TherapistDashboard"; // Import TherapistDashboard
+import MentorOnboardingContainer from './components/Bot/Onboarding/MentorOnboardingContainer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
 
@@ -99,6 +100,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['therapist']}>
               <TherapistDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mentor-onboard"
+          element={
+            <ProtectedRoute requireOnboarded={false} allowedRoles={['mentor']}>
+              <MentorOnboardingContainer onComplete={() => navigate('/mentor-dashboard')} />
             </ProtectedRoute>
           }
         />
