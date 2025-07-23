@@ -2,23 +2,31 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs";
 import User from "../models/user.mjs";
 
-export const signup = async (req, res) => {
+export const signUp = async (req, res) => {
   try {
-    console.log("Received body:", req.body);
+    const { name, email, password, role } = req.body;
 
-    const { name, email, password, phone } = req.body;
-
-    if (!name || !email || !password || !phone) {
+    if (!name || !email || !password) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Hash password
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (existingUser) {
+      return res.status(409).json({ error: "User already exists" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save user to database
-    const newUser = await User.create({ name, email, password: hashedPassword, phone });
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      status: role === 'mentor' ? 'pending' : 'active', // Set status based on role
+    });
 
-    res.status(201).json({ message: "User registered successfully", userId: newUser.id });
+    res.status(201).json({ message: "User created successfully", userId: user.id });
   } catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({ error: error.message });
@@ -99,3 +107,4 @@ export const getProfile = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
+

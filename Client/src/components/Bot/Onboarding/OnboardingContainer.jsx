@@ -7,6 +7,13 @@ import StepAddictionDetails from "./StepAddictionDetails"; // Import new step
 import StepSocialLife from "./stepSocialLife"
 import Summary from "./Summary";
 
+const WelcomeMessage = () => (
+  <div style={{ textAlign: 'center', margin: '20px 0' }}>
+    <h2>Welcome to MentourMe!</h2>
+    <p>We're excited to have you on board. Let's get started on your journey!</p>
+  </div>
+);
+
 const OnboardingContainer = ({ onComplete }) => {
   const [step, setStep] = useState(1);
   const [userData, setUserData] = useState({
@@ -52,7 +59,12 @@ const OnboardingContainer = ({ onComplete }) => {
     <Summary data={userData} onComplete={handleOnComplete} back={prevStep} />,
   ];
 
-  return <div className="onboarding-container">{steps[step - 1]}</div>;
+  return (
+    <div>
+      <WelcomeMessage />
+      <div className="onboarding-container">{steps[step - 1]}</div>
+    </div>
+  );
 };
 
 export default OnboardingContainer;

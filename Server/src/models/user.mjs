@@ -46,6 +46,11 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  status: {
+    type: DataTypes.ENUM('active', 'pending', 'rejected'),
+    defaultValue: 'active',
+    allowNull: false,
+  },
 }, {
   timestamps: true, // Adds createdAt & updatedAt automatically
 });

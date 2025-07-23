@@ -170,7 +170,7 @@ const SignUpPage = () => {
                   onChange={HandleChange}
                 >
                   <MenuItem value="user">User</MenuItem>
-                  <MenuItem value="mentor">Mentor</MenuItem>
+                  <MenuItem value="mentor">Mentor (Application Required)</MenuItem>
                   <MenuItem value="therapist">Therapist</MenuItem>
                 </Select>
               </FormControl>
