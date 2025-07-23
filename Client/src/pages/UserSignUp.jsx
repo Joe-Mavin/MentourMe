@@ -8,7 +8,7 @@ import {
   FaEye,
   FaEyeSlash,
 } from "react-icons/fa";
-import { Box, Card, CardContent, Typography, TextField, Button, InputAdornment, IconButton } from "@mui/material";
+import { Box, Card, CardContent, Typography, TextField, Button, InputAdornment, IconButton, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import styles from "../assets/styles/signUp.module.css";
 import { ENDPOINTS } from "../config/environment";
 
@@ -18,6 +18,7 @@ const SignUpPage = () => {
     email: "",
     password: "",
     phone: "",
+    role: "user",
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -33,12 +34,13 @@ const SignUpPage = () => {
   // Validate input fields
   const validateInput = () => {
     if (!formData.name.trim()) return "Name is required.";
-    if (!/^\S+@\S+\.\S+$/.test(formData.email))
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email))
       return "Please provide a valid email address.";
     if (!/^\+[1-9]\d{1,14}$/.test(formData.phone))
       return "Please provide a valid phone number (e.g., +1234567890).";
     if (formData.password.length < 6)
       return "Password must be at least 6 characters.";
+    if (!formData.role) return "Please select a role.";
     return null;
   };
 
@@ -157,6 +159,21 @@ const SignUpPage = () => {
                   ),
                 }}
               />
+              <FormControl fullWidth required>
+                <InputLabel id="role-label">Role</InputLabel>
+                <Select
+                  labelId="role-label"
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  label="Role"
+                  onChange={HandleChange}
+                >
+                  <MenuItem value="user">User</MenuItem>
+                  <MenuItem value="mentor">Mentor</MenuItem>
+                  <MenuItem value="therapist">Therapist</MenuItem>
+                </Select>
+              </FormControl>
               <Button
                 type="submit"
                 variant="contained"
