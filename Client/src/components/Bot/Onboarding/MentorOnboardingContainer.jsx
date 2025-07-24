@@ -11,12 +11,27 @@ const MentorOnboardingContainer = ({ onComplete }) => {
     setApplicationData({ ...applicationData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit application data for review
-    console.log('Mentor application submitted:', applicationData);
-    localStorage.setItem('onboarded', 'true');
-    onComplete();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/mentorship/onboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(applicationData),
+      });
+      if (response.ok) {
+        localStorage.setItem('onboarded', 'true');
+        onComplete();
+      } else {
+        alert('Failed to complete onboarding');
+      }
+    } catch (err) {
+      alert('Network error');
+    }
   };
 
   return (

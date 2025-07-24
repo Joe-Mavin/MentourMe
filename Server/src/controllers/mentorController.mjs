@@ -1,4 +1,5 @@
 import { Op } from 'sequelize';
+import jwt from 'jsonwebtoken';
 import User from '../models/user.mjs';
 import Specialization from '../models/specialization.mjs';
 
@@ -103,5 +104,27 @@ export const getTherapistDashboard = async (req, res) => {
     res.json({ clients });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+export const completeMentorOnboarding = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+    // Optionally save application data from req.body
+    // const { experience, motivation } = req.body;
+    // You can store this in a MentorApplication table if needed
+
+    // Mark mentor as onboarded
+    await User.update({ onboarded: true }, { where: { id: decoded.id } });
+
+    res.status(200).json({ message: 'Mentor onboarding complete' });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 }; 
