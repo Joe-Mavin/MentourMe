@@ -4,9 +4,9 @@ import User from "../models/user.mjs";
 
 export const signUp = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, phone } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phone) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -23,6 +23,7 @@ export const signUp = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      phone,
       status: role === 'mentor' ? 'pending' : 'active', // Set status based on role
     });
 
