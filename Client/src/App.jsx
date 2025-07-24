@@ -17,20 +17,24 @@ import theme from "./assets/theme";
 function ProtectedRoute({ children, requireOnboarded, allowedRoles }) {
   const token = localStorage.getItem('token');
   const onboarded = localStorage.getItem('onboarded') === 'true';
-  const userRole = localStorage.getItem('role'); // Get user role from localStorage
+  const userRole = localStorage.getItem('role');
 
   if (!token) return <Navigate to="/login" replace />;
 
   // Handle onboarding redirects
-  if (requireOnboarded && !onboarded) return <Navigate to="/onboard" replace />;
+  if (requireOnboarded && !onboarded) {
+    if (userRole === 'mentor') return <Navigate to="/mentor-onboard" replace />;
+    if (userRole === 'user') return <Navigate to="/onboard" replace />;
+    // Add therapist onboarding if needed
+  }
   if (!requireOnboarded && onboarded && userRole === 'user') return <Navigate to="/dashboard" replace />;
+  if (!requireOnboarded && onboarded && userRole === 'mentor') return <Navigate to="/mentor-dashboard" replace />;
 
   // Handle role-based redirects
   if (allowedRoles && !allowedRoles.includes(userRole)) {
-    // Redirect non-authorized roles to their respective dashboards or default
     if (userRole === 'mentor') return <Navigate to="/mentor-dashboard" replace />;
     if (userRole === 'therapist') return <Navigate to="/therapist-dashboard" replace />;
-    return <Navigate to="/dashboard" replace />; // Default redirect for users
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -45,6 +49,15 @@ function App() {
       navigate("/dashboard");
     };
     return <OnboardingContainer onComplete={handleOnboardingComplete} />;
+  };
+
+  const MentorOnboardingWithRedirect = () => {
+    const navigate = useNavigate();
+    const handleMentorOnboardingComplete = () => {
+      localStorage.setItem('onboarded', 'true');
+      navigate("/mentor-dashboard");
+    };
+    return <MentorOnboardingContainer onComplete={handleMentorOnboardingComplete} />;
   };
 
   return (
@@ -107,7 +120,7 @@ function App() {
           path="/mentor-onboard"
           element={
             <ProtectedRoute requireOnboarded={false} allowedRoles={['mentor']}>
-              <MentorOnboardingContainer onComplete={() => navigate('/mentor-dashboard')} />
+              <MentorOnboardingWithRedirect />
             </ProtectedRoute>
           }
         />

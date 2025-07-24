@@ -15,6 +15,7 @@ const MentorOnboardingContainer = ({ onComplete }) => {
     e.preventDefault();
     // Submit application data for review
     console.log('Mentor application submitted:', applicationData);
+    localStorage.setItem('onboarded', 'true');
     onComplete();
   };
 
