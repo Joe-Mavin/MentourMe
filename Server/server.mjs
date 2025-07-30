@@ -20,17 +20,8 @@ const app = express();
 app.use(morgan('combined'));
 app.use(helmet());
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
+// Allow all origins for troubleshooting
+app.use(cors());
 
 app.use(express.json()); // Parse JSON requests
 
