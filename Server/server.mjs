@@ -6,6 +6,8 @@ import botRoutes from "./src/routes/botroutes.mjs"
 import userRoutes from "./src/routes/user.routes.mjs";
 import mentorRoutes from "./src/routes/mentorRoutes.mjs";
 import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
 import './src/models/user.mjs';
 import './src/models/journey.mjs';
 import './src/models/task.mjs';
@@ -15,23 +17,19 @@ dotenv.config();
 
 const app = express();
 
-// More secure CORS configuration
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:5173', // Vite's default port
-  'https://testmehere.onyangojp.tech'
-];
+app.use(morgan('combined'));
+app.use(helmet());
 
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  credentials: true,
 }));
 
 app.use(express.json()); // Parse JSON requests
@@ -44,6 +42,20 @@ app.use("/bot",botRoutes)
 app.use("/api/users", userRoutes);
 app.use("/api/mentorship", mentorRoutes);
 
+// CORS error handler
+app.use((err, req, res, next) => {
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({ message: 'CORS error: Origin not allowed' });
+  }
+  next(err);
+});
+
+// Catch-all error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal Server Error' });
+});
+
 console.log("Loaded DB_USER:", process.env.DB_USER);
 console.log("Loaded DB_NAME:", process.env.DB_NAME);
 
@@ -52,6 +64,6 @@ const PORT = process.env.PORT || 5001;
 sequelize.sync({ alter: true })
   .then(() => {
     console.log("Database updated (sync with alter) ✅");
-    app.listen(PORT, "localhost", () => console.log(`Server running on all interfaces (0.0.0.0:5001)`));
+    app.listen(PORT, "0.0.0.0", () => console.log(`Server running on all interfaces (0.0.0.0:${PORT})`));
   })
   .catch((err) => console.error("DB Connection Error ❌", err));
