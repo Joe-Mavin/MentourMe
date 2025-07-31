@@ -11,6 +11,7 @@ import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import TimelineIcon from '@mui/icons-material/Timeline';
+import ChatIcon from '@mui/icons-material/Chat';
 
 const Sidebar = () => {
   const theme = useTheme();
@@ -63,6 +64,7 @@ const Sidebar = () => {
         <SidebarItem icon={<ConnectWithoutContactIcon />} label="Connect" />
         <SidebarItem icon={<SmartToyIcon />} label="Bot" route="/onboard"/>
         <SidebarItem icon={<PersonIcon />} label="Profile" route="/profile" />
+        <SidebarItem icon={<ChatIcon />} label="Messages" route="/messages" />
         <SidebarItem icon={<SettingsIcon />} label="Settings" />
         <SidebarItem icon={<ContactEmergencyIcon />} label="Mentor" />
         <SidebarItem icon={<Diversity1Icon  />} label="Peers" />

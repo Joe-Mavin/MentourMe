@@ -12,6 +12,7 @@ import TherapistDashboard from "./pages/TherapistDashboard"; // Import Therapist
 import MentorOnboardingContainer from './components/Bot/Onboarding/MentorOnboardingContainer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
+import Messages from './pages/Messages';
 
 // ProtectedRoute checks for JWT, onboarding status, and user role
 function ProtectedRoute({ children, requireOnboarded, allowedRoles }) {
@@ -96,6 +97,14 @@ function App() {
           element={
             <ProtectedRoute requireOnboarded={true} allowedRoles={['user']}>
               <JourneyPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/messages"
+          element={
+            <ProtectedRoute allowedRoles={["user", "mentor", "therapist"]}>
+              <Messages />
             </ProtectedRoute>
           }
         />
