@@ -12,6 +12,7 @@ import './src/models/user.mjs';
 import './src/models/journey.mjs';
 import './src/models/task.mjs';
 import './src/models/associations.mjs';
+import './src/models/message.mjs';
 
 dotenv.config();
 
