@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Box, List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Divider, TextField, Button, Paper } from '@mui/material';
 import Sidebar from '../components/dashboard/sidebar';
+import { useParams } from 'react-router-dom';
 
 const API_BASE = '/api/mentorship/messages';
 
 const Messages = () => {
+  const { userId: paramUserId } = useParams();
   const [conversations, setConversations] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -14,6 +16,13 @@ const Messages = () => {
   useEffect(() => {
     fetchInbox();
   }, []);
+
+  useEffect(() => {
+    if (paramUserId && conversations.length > 0) {
+      fetchConversation(paramUserId);
+    }
+    // eslint-disable-next-line
+  }, [paramUserId, conversations]);
 
   const fetchInbox = async () => {
     const token = localStorage.getItem('token');

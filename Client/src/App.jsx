@@ -13,6 +13,7 @@ import MentorOnboardingContainer from './components/Bot/Onboarding/MentorOnboard
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
 import Messages from './pages/Messages';
+import UserProfile from './pages/UserProfile';
 
 // ProtectedRoute checks for JWT, onboarding status, and user role
 function ProtectedRoute({ children, requireOnboarded, allowedRoles }) {
@@ -89,6 +90,14 @@ function App() {
           element={
             <ProtectedRoute requireOnboarded={true} allowedRoles={['user', 'mentor', 'therapist']}>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:id"
+          element={
+            <ProtectedRoute allowedRoles={["user", "mentor", "therapist"]}>
+              <UserProfile />
             </ProtectedRoute>
           }
         />
