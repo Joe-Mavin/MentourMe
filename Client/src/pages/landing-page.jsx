@@ -28,128 +28,54 @@ const LandingPage = () => {
     autoplaySpeed: 3000,
   };
 
-  return (
-    <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: theme.palette.background.default }}>
-      {/* Header */}
-      <Box
-        component="header"
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          px: { xs: 2, md: 6 },
-          py: 2,
-          bgcolor: 'transparent',
-        }}
-      >
-        <Typography variant="h5" fontWeight={900} color="primary" sx={{ letterSpacing: 2 }}>
-          MentourMe
-        </Typography>
-        {/* Role selection buttons */}
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => { localStorage.setItem('selectedRole', 'user'); navigate('/login'); }}
-            sx={{ borderRadius: 3, fontWeight: 700 }}
-          >
-            Continue as User
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => { localStorage.setItem('selectedRole', 'mentor'); navigate('/login'); }}
-            sx={{ borderRadius: 3, fontWeight: 700 }}
-          >
-            Continue as Mentor
-          </Button>
-          <Button
-            variant="outlined"
-            color="success"
-            onClick={() => { localStorage.setItem('selectedRole', 'therapist'); navigate('/login'); }}
-            sx={{ borderRadius: 3, fontWeight: 700 }}
-          >
-            Continue as Therapist
-          </Button>
-        </Box>
-      </Box>
+  const HERO_IMAGE = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80";
 
-      {/* Hero Section with Background Video */}
-      <Box
-        sx={{
-          position: 'relative',
-          textAlign: 'center',
-          py: { xs: 6, md: 10 },
-          px: { xs: 2, md: 6 },
-          minHeight: { xs: 400, md: 520 },
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Box
-          component="video"
-          autoPlay
-          loop
-          muted
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            zIndex: 0,
-          }}
-        >
-          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-        </Box>
-        <Box sx={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 700 }}>
-          <Typography variant="h2" fontWeight={900} color="#fff" mb={2} sx={{ fontSize: { xs: '2rem', md: '3rem' } }}>
-            Empowering Men Through Mentorship
-          </Typography>
-          <Typography variant="h6" color="#bfc9e0" mb={3}>
-            Connect with experienced mentors and unlock your full potential.
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', sm: 'row' },
-              alignItems: 'center',
-              gap: 2,
-              mt: 2,
-              width: '100%',
-              maxWidth: 400,
-              mx: 'auto',
-            }}
-          >
-            <FaEnvelope style={{ fontSize: 24, color: theme.palette.primary.main }} />
-            <input
-              type="email"
-              placeholder="Enter your email"
-              style={{
-                flex: 1,
-                padding: '12px',
-                fontSize: '1rem',
-                borderRadius: 8,
-                border: 'none',
-                outline: 'none',
-                marginRight: 8,
-                width: '100%',
-                marginBottom: 8,
-              }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: 3, fontWeight: 700, width: { xs: '100%', sm: 'auto' } }}
-            >
+  return (
+    <div className="bg-white min-h-screen font-sans">
+      {/* Sticky Header */}
+      <header className="fixed top-0 left-0 w-full z-20 transition-all bg-transparent backdrop-blur-md">
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-4">
+          <span className="text-3xl font-black tracking-widest text-primary">MentourMe</span>
+          <nav className="hidden md:flex gap-6">
+            <button className="text-primary font-semibold hover:underline" onClick={() => { localStorage.setItem('selectedRole', 'user'); navigate('/login'); }}>User Login</button>
+            <button className="text-primary font-semibold hover:underline" onClick={() => { localStorage.setItem('selectedRole', 'mentor'); navigate('/login'); }}>Mentor Login</button>
+            <button className="text-primary font-semibold hover:underline" onClick={() => { localStorage.setItem('selectedRole', 'therapist'); navigate('/login'); }}>Therapist Login</button>
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative flex items-center justify-center min-h-[80vh] w-full pt-24 pb-12 bg-deepBlue">
+        <img src={HERO_IMAGE} alt="Hero" className="absolute inset-0 w-full h-full object-cover object-center z-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-deepBlue/90 z-10" />
+        <div className="relative z-20 flex flex-col items-center text-center px-4 max-w-2xl mx-auto">
+          <h1 className="text-white text-4xl md:text-6xl font-extrabold tracking-tight mb-4" style={{ letterSpacing: '0.04em' }}>
+            Forge Brotherhood. Build Purpose.
+          </h1>
+          <p className="text-gray-200 text-lg md:text-2xl font-light mb-8 max-w-xl mx-auto">
+            Unlock your full potential with mentorship, community, and growth programs for men.
+          </p>
+          <Link to="/signup">
+            <button className="bg-accent text-deepBlue font-bold text-lg px-8 py-3 rounded-full shadow-lg hover:brightness-110 transition-all focus:outline-accent focus:ring-2 focus:ring-accent">
               Get Started
-            </Button>
-          </Box>
-        </Box>
-      </Box>
+            </button>
+          </Link>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section className="bg-mutedGray py-16 px-4 md:px-0">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-primary text-3xl md:text-4xl font-bold mb-6">About MentourMe</h2>
+            <p className="text-primary text-lg mb-6">MentourMe is a modern mentorship and personal development platform designed to empower men to unlock their full potential. The platform connects users with mentors, provides interactive onboarding, and helps track personal growth in key life areas.</p>
+            <blockquote className="border-l-4 border-accent pl-4 italic text-xl font-serif text-primary/80 mb-4">“The journey to greatness is best walked together.”</blockquote>
+          </div>
+          <div className="flex justify-center">
+            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80" alt="About" className="rounded-2xl shadow-xl w-full max-w-md object-cover" />
+          </div>
+        </div>
+      </section>
 
       {/* Why Choose MentourMe */}
       <Box sx={{ textAlign: 'center', py: { xs: 4, md: 8 }, px: { xs: 2, md: 6 } }}>
@@ -223,7 +149,7 @@ const LandingPage = () => {
           </Box>
         </Box>
       </Box>
-    </Box>
+    </div>
   );
 };
 
