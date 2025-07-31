@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box, List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Divider, TextField, Button, Paper } from '@mui/material';
 import Sidebar from '../components/dashboard/sidebar';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const API_BASE = '/api/mentorship/messages';
 
@@ -65,9 +66,14 @@ const Messages = () => {
             {conversations.map(user => (
               <ListItem button key={user.id} selected={selectedUser?.id === user.id} onClick={() => fetchConversation(user.id)}>
                 <ListItemAvatar>
-                  <Avatar src={user.profilePicture} />
+                  <Link to={`/profile/${user.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
+                    <Avatar src={user.profilePicture} />
+                  </Link>
                 </ListItemAvatar>
-                <ListItemText primary={user.name} secondary={user.role} />
+                <ListItemText
+                  primary={<Link to={`/profile/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{user.name}</Link>}
+                  secondary={user.role}
+                />
               </ListItem>
             ))}
           </List>
