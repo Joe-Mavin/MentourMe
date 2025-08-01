@@ -12,8 +12,11 @@ export const reviewMentorApplications = async (req, res) => {
 export const approveMentorApplication = async (req, res) => {
   try {
     const { userId } = req.params;
-    await User.update({ status: 'active' }, { where: { id: userId, role: 'mentor', status: 'pending' } });
-    res.json({ message: 'Mentor application approved' });
+    const mentor = await User.findOne({ where: { id: userId, role: 'mentor', status: 'pending' } });
+    if (!mentor) return res.status(404).json({ message: 'Mentor not found or not pending' });
+    mentor.status = 'active';
+    await mentor.save();
+    res.json({ message: 'Mentor approved', mentor });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -22,8 +25,11 @@ export const approveMentorApplication = async (req, res) => {
 export const rejectMentorApplication = async (req, res) => {
   try {
     const { userId } = req.params;
-    await User.update({ status: 'rejected' }, { where: { id: userId, role: 'mentor', status: 'pending' } });
-    res.json({ message: 'Mentor application rejected' });
+    const mentor = await User.findOne({ where: { id: userId, role: 'mentor', status: 'pending' } });
+    if (!mentor) return res.status(404).json({ message: 'Mentor not found or not pending' });
+    mentor.status = 'rejected';
+    await mentor.save();
+    res.json({ message: 'Mentor rejected', mentor });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
