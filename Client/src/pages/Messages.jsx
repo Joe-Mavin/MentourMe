@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Divider, TextField, Button, Paper } from '@mui/material';
+import { Box, List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Divider, TextField, Button, Paper, Tabs, Tab } from '@mui/material';
 import Sidebar from '../components/dashboard/sidebar';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -13,9 +13,12 @@ const Messages = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [tab, setTab] = useState(0);
+  const [mentors, setMentors] = useState([]);
 
   useEffect(() => {
     fetchInbox();
+    fetchMentors();
   }, []);
 
   useEffect(() => {
@@ -55,28 +58,57 @@ const Messages = () => {
     fetchConversation(selectedUser.id);
   };
 
+  const fetchMentors = async () => {
+    const token = localStorage.getItem('token');
+    const res = await axios.get('/api/mentorship/mentors', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setMentors(res.data);
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Sidebar />
       <Box sx={{ flex: 1, display: 'flex', height: '100vh' }}>
         <Paper sx={{ width: 320, borderRadius: 0, boxShadow: 2, overflowY: 'auto' }}>
-          <Typography variant="h6" sx={{ p: 2 }}>Conversations</Typography>
+          <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="fullWidth">
+            <Tab label="Conversations" />
+            <Tab label="Mentors" />
+          </Tabs>
           <Divider />
-          <List>
-            {conversations.map(user => (
-              <ListItem button key={user.id} selected={selectedUser?.id === user.id} onClick={() => fetchConversation(user.id)}>
-                <ListItemAvatar>
-                  <Link to={`/profile/${user.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
-                    <Avatar src={user.profilePicture} />
-                  </Link>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={<Link to={`/profile/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{user.name}</Link>}
-                  secondary={user.role}
-                />
-              </ListItem>
-            ))}
-          </List>
+          {tab === 0 ? (
+            <List>
+              {conversations.map(user => (
+                <ListItem button key={user.id} selected={selectedUser?.id === user.id} onClick={() => fetchConversation(user.id)}>
+                  <ListItemAvatar>
+                    <Link to={`/profile/${user.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
+                      <Avatar src={user.profilePicture} />
+                    </Link>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={<Link to={`/profile/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{user.name}</Link>}
+                    secondary={user.role}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <List>
+              {mentors.map(mentor => (
+                <ListItem button key={mentor.id} selected={selectedUser?.id === mentor.id} onClick={() => fetchConversation(mentor.id)}>
+                  <ListItemAvatar>
+                    <Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
+                      <Avatar src={mentor.profilePicture} />
+                    </Link>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={<Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{mentor.name}</Link>}
+                    secondary={mentor.bio}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          )}
         </Paper>
         <Box sx={{ flex: 1, p: 3, display: 'flex', flexDirection: 'column', height: '100vh' }}>
           {selectedUser ? (
