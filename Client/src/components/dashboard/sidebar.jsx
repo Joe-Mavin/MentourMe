@@ -19,6 +19,7 @@ const Sidebar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [connectOpen, setConnectOpen] = useState(false);
+  const isAdmin = localStorage.getItem('role') === 'admin';
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -93,6 +94,7 @@ const Sidebar = () => {
         <SidebarItem icon={<SmartToyIcon />} label="Bot" route="/onboard"/>
         <SidebarItem icon={<PersonIcon />} label="Profile" route="/profile" />
         <SidebarItem icon={<SettingsIcon />} label="Settings" />
+        {isAdmin && <SidebarItem icon={<SettingsIcon />} label="Admin Panel" route="/admin" />}
         <SidebarItem icon={<ContactEmergencyIcon />} label="Mentor" />
         <SidebarItem icon={<Diversity1Icon  />} label="Peers" />
       </Box>

@@ -14,6 +14,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
 import Messages from './pages/Messages';
 import UserProfile from './pages/UserProfile';
+import AdminPanel from './pages/AdminPanel';
 
 // ProtectedRoute checks for JWT, onboarding status, and user role
 function ProtectedRoute({ children, requireOnboarded, allowedRoles }) {
@@ -142,6 +143,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminPanel /></ProtectedRoute>} />
       </Routes>
     </Router>
     </ThemeProvider>
