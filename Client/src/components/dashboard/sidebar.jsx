@@ -12,10 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import ChatIcon from '@mui/icons-material/Chat';
+import { useState } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Sidebar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [connectOpen, setConnectOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -61,10 +64,34 @@ const Sidebar = () => {
       {/* Sidebar Items */}
       <Box sx={{ width: '100%', flex: 1 }}>
         <SidebarItem icon={<HouseIcon />} label="Dashboard" />
-        <SidebarItem icon={<ConnectWithoutContactIcon />} label="Connect" />
+        <Box>
+          <Button
+            startIcon={<ConnectWithoutContactIcon />}
+            endIcon={<ExpandMoreIcon />}
+            onClick={() => setConnectOpen(!connectOpen)}
+            sx={{
+              width: '100%',
+              justifyContent: 'flex-start',
+              color: theme.palette.text.primary,
+              fontWeight: 700,
+              borderRadius: 2,
+              mb: 1,
+              textTransform: 'none',
+              pl: 1.5,
+            }}
+            aria-label="Connect menu"
+          >
+            Connect
+          </Button>
+          {connectOpen && (
+            <Box sx={{ pl: 4 }}>
+              <SidebarItem icon={<ChatIcon />} label="Messages" route="/messages" />
+              {/* Future: <SidebarItem icon={<VideoCallIcon />} label="Video Call" route="/video-call" /> */}
+            </Box>
+          )}
+        </Box>
         <SidebarItem icon={<SmartToyIcon />} label="Bot" route="/onboard"/>
         <SidebarItem icon={<PersonIcon />} label="Profile" route="/profile" />
-        <SidebarItem icon={<ChatIcon />} label="Messages" route="/messages" />
         <SidebarItem icon={<SettingsIcon />} label="Settings" />
         <SidebarItem icon={<ContactEmergencyIcon />} label="Mentor" />
         <SidebarItem icon={<Diversity1Icon  />} label="Peers" />
