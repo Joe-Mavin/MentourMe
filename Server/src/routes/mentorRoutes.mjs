@@ -10,5 +10,6 @@ router.post('/onboard', completeMentorOnboarding);
 router.post('/messages', sendMessage);
 router.get('/messages/conversation/:userId', getConversation);
 router.get('/messages/inbox', getInbox);
+router.get('/mentors', getMentors);
 
 export default router; 
