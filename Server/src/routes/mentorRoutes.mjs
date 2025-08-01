@@ -1,5 +1,5 @@
 import express from 'express';
-import { getMentors, getMentorDashboard, completeMentorOnboarding } from '../controllers/mentorController.mjs';
+import { getMentors, getMentorDashboard, completeMentorOnboarding, getSpecializations } from '../controllers/mentorController.mjs';
 import { sendMessage, getConversation, getInbox } from '../controllers/messageController.mjs';
 
 const router = express.Router();
@@ -11,5 +11,6 @@ router.post('/messages', sendMessage);
 router.get('/messages/conversation/:userId', getConversation);
 router.get('/messages/inbox', getInbox);
 router.get('/mentors', getMentors);
+router.get('/specializations', getSpecializations);
 
 export default router; 
