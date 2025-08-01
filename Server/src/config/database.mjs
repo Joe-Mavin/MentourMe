@@ -18,7 +18,7 @@ const sequelize = new Sequelize(
   }
 );
 
-// ⚠️ Only use this during initial dev:
+// // ⚠️ Only use this during initial dev:
 // sequelize.sync().then(() => console.log("Initial sync done ✅"));
 
 export default sequelize;
