@@ -15,6 +15,7 @@ const Messages = () => {
   const [newMessage, setNewMessage] = useState('');
   const [tab, setTab] = useState(0);
   const [mentors, setMentors] = useState([]);
+  const [mentorError, setMentorError] = useState(null);
 
   useEffect(() => {
     fetchInbox();
@@ -59,11 +60,17 @@ const Messages = () => {
   };
 
   const fetchMentors = async () => {
-    const token = localStorage.getItem('token');
-    const res = await axios.get('/api/mentorship/mentors', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setMentors(res.data);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get('/api/mentorship/mentors', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMentors(res.data);
+      setMentorError(null);
+    } catch (err) {
+      setMentors([]);
+      setMentorError('Failed to load mentors. Please try again later.');
+    }
   };
 
   return (
@@ -93,21 +100,29 @@ const Messages = () => {
               ))}
             </List>
           ) : (
-            <List>
-              {mentors.map(mentor => (
-                <ListItem button key={mentor.id} selected={selectedUser?.id === mentor.id} onClick={() => fetchConversation(mentor.id)}>
-                  <ListItemAvatar>
-                    <Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
-                      <Avatar src={mentor.profilePicture} />
-                    </Link>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={<Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{mentor.name}</Link>}
-                    secondary={mentor.bio}
-                  />
-                </ListItem>
-              ))}
-            </List>
+            <>
+              {mentorError ? (
+                <Typography color="error" sx={{ p: 2 }}>{mentorError}</Typography>
+              ) : mentors.length === 0 ? (
+                <Typography color="text.secondary" sx={{ p: 2 }}>No mentors found.</Typography>
+              ) : (
+                <List>
+                  {mentors.map(mentor => (
+                    <ListItem button key={mentor.id} selected={selectedUser?.id === mentor.id} onClick={() => fetchConversation(mentor.id)}>
+                      <ListItemAvatar>
+                        <Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
+                          <Avatar src={mentor.profilePicture} />
+                        </Link>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={<Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{mentor.name}</Link>}
+                        secondary={mentor.bio}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </>
           )}
         </Paper>
         <Box sx={{ flex: 1, p: 3, display: 'flex', flexDirection: 'column', height: '100vh' }}>

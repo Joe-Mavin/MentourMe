@@ -7,7 +7,7 @@ import Specialization from '../models/specialization.mjs';
 export const getMentors = async (req, res) => {
   try {
     const { specialization } = req.query;
-    let where = { role: 'mentor' };
+    let where = { role: 'mentor', status: 'active' };
     let include = [];
     if (specialization) {
       include.push({
@@ -22,6 +22,7 @@ export const getMentors = async (req, res) => {
     const mentors = await User.findAll({ where, include });
     res.json(mentors);
   } catch (err) {
+    console.error('getMentors error:', err);
     res.status(500).json({ error: err.message });
   }
 };
