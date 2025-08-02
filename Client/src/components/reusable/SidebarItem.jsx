@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const SidebarItem = ({ icon, label, route }) => {
-  const [toggleIcon, setToggleIcon] = useState(false);
-  const navigate = useNavigate(); // React Router navigation
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isActive = route && location.pathname === route;
 
   const handleClick = () => {
-    setToggleIcon(!toggleIcon); // Toggle state
     if (route) {
-      navigate(route); // Navigate to the specified route
+      navigate(route);
     }
   };
 
@@ -22,9 +22,9 @@ const SidebarItem = ({ icon, label, route }) => {
         alignItems: 'center',
         p: 2,
         justifyContent: 'flex-start',
-        color: toggleIcon ? 'white' : '#FFFFFF',
+        color: isActive ? 'white' : '#FFFFFF',
         textTransform: 'none',
-        backgroundColor: toggleIcon ? '#E0E1E2' : 'transparent',
+        backgroundColor: isActive ? '#E0E1E2' : 'transparent',
         '&:hover': {
           backgroundColor: '#E0E1E2',
         },
@@ -41,8 +41,8 @@ const SidebarItem = ({ icon, label, route }) => {
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: '50%',
-          backgroundColor: toggleIcon ? '#0075FF' : '#1A1F37',
-          color: toggleIcon ? 'white' : 'blue',
+          backgroundColor: isActive ? '#0075FF' : '#1A1F37',
+          color: isActive ? 'white' : 'blue',
           mr: 2,
         }}
       >

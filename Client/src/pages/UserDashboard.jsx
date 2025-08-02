@@ -355,78 +355,14 @@ const UserDashboard = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: theme.palette.background.default }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-          bgcolor: theme.palette.primary.main,
-          zIndex: theme.zIndex.drawer + 1
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Welcome, {currentUser || 'User'}!
-          </Typography>
-          {/* Navigation for different roles */}
-          {currentUserRole === 'mentor' && (
-            <Button color="inherit" onClick={() => navigate('/mentor-dashboard')}>
-              Mentor Dashboard
-            </Button>
-          )}
-          {currentUserRole === 'therapist' && (
-            <Button color="inherit" onClick={() => navigate('/therapist-dashboard')}>
-              Therapist Dashboard
-            </Button>
-          )}
-          {/* Example: A generic profile link always visible */}
-          <Button color="inherit" onClick={() => navigate('/profile')}>
-            Profile
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Hidden smUp implementation="css">
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          <Sidebar handleDrawerToggle={handleDrawerToggle} />
-        </Drawer>
-      </Hidden>
-      <Hidden smDown implementation="css">
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          <Sidebar handleDrawerToggle={handleDrawerToggle} />
-        </Drawer>
-      </Hidden>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 8 }}
-      >
+    <Box sx={{ display: 'flex' }}>
+      <Sidebar />
+      <Box sx={{ flex: 1, maxWidth: 1100, margin: '0 auto', p: { xs: 2, md: 4 } }}>
+        <Typography variant="h3" fontWeight={900} color="primary" mb={3} textAlign="center">
+          User Dashboard
+        </Typography>
+        
         {/* Main content of the dashboard */}
-        {/* Existing content for user dashboard... */}
         <Grid container spacing={4} sx={{ mt: 4 }}>
             <Grid item xs={12} md={6}>
               {/* My Journey Card */}
@@ -450,137 +386,83 @@ const UserDashboard = () => {
                     />
                     <Box sx={{
                       position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: 80,
-                      height: 80,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: '#fff',
+                      fontWeight: 700,
+                      fontSize: '1.2rem'
                     }}>
-                      <Typography variant="h6" color="#fff" fontWeight={800}>
-                        {Math.round(progress)}%
-                      </Typography>
+                      {progress}%
                     </Box>
                   </Box>
                   <Box>
-                    <Typography variant="h6" color="#fff" fontWeight={800}>
+                    <Typography variant="h5" fontWeight={800} color="white">
                       My Journey
                     </Typography>
-                    <Typography color="#e0e7ef" fontSize={14}>
-                      Goal: {journey ? journey.goal : '-'}
-                    </Typography>
-                    <Typography color="#e0e7ef" fontSize={14}>
-                      Points: <b>{journey ? journey.points : 0}</b>
+                    <Typography color="rgba(255,255,255,0.8)" fontSize={14}>
+                      {journey?.currentStep || 'Getting Started'}
                     </Typography>
                   </Box>
                 </Box>
                 <CardContent>
-                  {loading ? (
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <CircularProgress size={24} color="primary" />
-                      <Typography>Loading journey...</Typography>
-                    </Box>
-                  ) : error && !journey ? (
-                    <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
-                      <Typography color="error" textAlign="center">{error}</Typography>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        sx={{ borderRadius: 3, fontWeight: 700, minWidth: 180 }}
-                        onClick={handleGenerateJourney}
-                        disabled={generating}
-                      >
-                        {generating ? 'Creating...' : 'Start My Journey'}
-                      </Button>
-                    </Box>
-                  ) : !todayTask && journey ? (
-                    <Typography>No task for today. Enjoy your progress!</Typography>
-                  ) : todayTask ? (
-                    <Box>
-                      <Typography variant="subtitle1" fontWeight={700} color="primary" mb={1}>
-                        Today’s Task
-                      </Typography>
-                      <Typography mb={2}>{todayTask.description}</Typography>
-                      <Typography variant="body2" color="text.secondary" mb={2}>
-                        Due: {todayTask.dueDate}
-                      </Typography>
-                      <Box display="flex" gap={2}>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          startIcon={<CheckCircleIcon />}
-                          sx={{ borderRadius: 3, fontWeight: 700 }}
-                          onClick={() => handleTaskAction(todayTask.id, 'done')}
-                          disabled={taskActionLoading}
-                          aria-label="Mark task as done"
-                        >
-                          {taskActionLoading ? 'Processing...' : 'Mark as Done'}
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="warning"
-                          startIcon={<SkipNextIcon />}
-                          sx={{ borderRadius: 3, fontWeight: 700 }}
-                          onClick={() => handleTaskAction(todayTask.id, 'skip')}
-                          disabled={taskActionLoading}
-                          aria-label="Skip task"
-                        >
-                          Skip
-                        </Button>
-                        {/* Feedback button can be implemented later */}
-                        <Button variant="outlined" color="info" startIcon={<FeedbackIcon />} sx={{ borderRadius: 3, fontWeight: 700 }} disabled aria-label="Feedback">
-                          Feedback
-                        </Button>
-                      </Box>
-                    </Box>
-                  ) : null}
+                  <Typography variant="body2" color="text.secondary" mb={2}>
+                    {journey?.description || 'Your personalized journey to success starts here.'}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleGenerateJourney}
+                    disabled={journey?.isGenerating}
+                    startIcon={journey?.isGenerating ? <CircularProgress size={20} /> : <TimelineIcon />}
+                    sx={{ borderRadius: 2, fontWeight: 700 }}
+                  >
+                    {journey?.isGenerating ? 'Generating...' : 'Generate Journey'}
+                  </Button>
                 </CardContent>
               </Card>
             </Grid>
+
             <Grid item xs={12} md={6}>
               {/* Leaderboard Card */}
               <Card sx={{ borderRadius: 4, boxShadow: 6, p: 0, overflow: 'hidden', mb: 3 }}>
                 <Box sx={{
-                  background: 'linear-gradient(90deg, #fbbf24 0%, #f59e42 100%)',
+                  background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)',
                   py: 3,
                   px: 2,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 2,
+                  gap: 3,
                 }}>
                   <EmojiEventsIcon sx={{ fontSize: 40, color: '#fff' }} />
-                  <Typography variant="h6" color="#fff" fontWeight={800}>
-                    Leaderboard
-                  </Typography>
+                  <Box>
+                    <Typography variant="h5" fontWeight={800} color="white">
+                      Leaderboard
+                    </Typography>
+                    <Typography color="rgba(255,255,255,0.8)" fontSize={14}>
+                      Top performers this week
+                    </Typography>
+                  </Box>
                 </Box>
                 <CardContent>
-                  {loading ? (
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <CircularProgress size={24} color="primary" />
-                      <Typography>Loading leaderboard...</Typography>
-                    </Box>
-                  ) : leaderboard.length === 0 ? (
-                    <Typography>No leaderboard data yet.</Typography>
+                  {leaderboard.length === 0 ? (
+                    <Typography color="text.secondary">No leaderboard data available yet.</Typography>
                   ) : (
-                    leaderboard.slice(0, 5).map((user, idx) => {
-                      // Highlight current user
-                      const isCurrentUser = currentUser && user.name === currentUser;
-                      return (
-                        <Box key={user.name} display="flex" alignItems="center" gap={2} mb={1} sx={{ bgcolor: isCurrentUser ? 'primary.light' : 'transparent', borderRadius: 2, px: 1 }}>
-                          <Typography fontWeight={700} color={isCurrentUser ? 'primary' : 'text.primary'}>
-                            {idx + 1}.
+                    <Box>
+                      {leaderboard.slice(0, 5).map((user, index) => (
+                        <Box key={user.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <Typography variant="h6" color="primary" sx={{ mr: 2, fontWeight: 700 }}>
+                            #{index + 1}
                           </Typography>
-                          <Typography fontWeight={700} color={isCurrentUser ? 'primary' : 'text.primary'}>
+                          <Typography variant="body2" sx={{ flex: 1 }}>
                             {user.name}
                           </Typography>
-                          <Typography color="text.secondary">Points: {user.points}</Typography>
-                          <Typography color="text.secondary">Milestones: {user.milestones}</Typography>
-                          {isCurrentUser && <EmojiEventsIcon color="primary" fontSize="small" sx={{ ml: 1 }} />}
+                          <Typography variant="body2" color="text.secondary">
+                            {user.points} pts
+                          </Typography>
                         </Box>
-                      );
-                    })
+                      ))}
+                    </Box>
                   )}
                 </CardContent>
               </Card>
