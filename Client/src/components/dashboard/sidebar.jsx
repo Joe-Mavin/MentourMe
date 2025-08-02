@@ -64,7 +64,7 @@ const Sidebar = () => {
 
       {/* Sidebar Items */}
       <Box sx={{ width: '100%', flex: 1 }}>
-        <SidebarItem icon={<HouseIcon />} label="Dashboard" />
+        <SidebarItem icon={<HouseIcon />} label="Dashboard" route="/dashboard" />
         <Box>
           <Button
             startIcon={<ConnectWithoutContactIcon />}
