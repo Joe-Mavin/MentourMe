@@ -33,4 +33,38 @@ export const rejectMentorApplication = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+export const promoteUserToAdmin = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    user.role = 'admin';
+    await user.save();
+    res.json({ message: 'User promoted to admin', user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    await user.destroy();
+    res.json({ message: 'User deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const listAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({ attributes: ['id', 'name', 'email', 'role', 'status'] });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }; 
