@@ -38,11 +38,11 @@ const Messages = () => {
   }, []);
 
   useEffect(() => {
-    if (paramUserId && conversations.length > 0) {
+    if (paramUserId && (!selectedUser || selectedUser.id !== paramUserId)) {
       fetchConversation(paramUserId);
     }
     // eslint-disable-next-line
-  }, [paramUserId, conversations]);
+  }, [paramUserId, conversations, selectedUser]);
 
   const fetchInbox = async () => {
     const token = localStorage.getItem('token');
