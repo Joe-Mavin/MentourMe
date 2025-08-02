@@ -15,6 +15,7 @@ const SidebarItem = ({ icon, label, route }) => {
 
   return (
     <Button
+      type="button"
       onClick={handleClick}
       sx={{
         display: 'flex',
