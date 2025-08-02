@@ -1,0 +1,10 @@
+{
+  "development": {
+    "username": "root",
+    "password": "",
+    "database": "MentourMe",
+    "host": "127.0.0.1",
+    "dialect": "mariadb",
+    "port": 3306
+  }
+} 
