@@ -5,7 +5,9 @@ import LandingPage from "./pages/landing-page";
 import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate } from "react-router-dom";
 import SignUpPage from "./pages/UserSignUp";
 import LoginPage from "./pages/loginPage";
-import UserDashboard, { ProfilePage, JourneyPage } from "./pages/UserDashboard";
+import UserDashboard from "./pages/UserDashboard";
+import ProfilePage from "./pages/ProfilePage";
+import JourneyPage from "./pages/JourneyPage";
 import OnboardingContainer from "./components/Bot/Onboarding/OnboardingContainer";
 import MentorDashboard from "./pages/MentorDashboard"; // Import MentorDashboard
 import TherapistDashboard from "./pages/TherapistDashboard"; // Import TherapistDashboard
