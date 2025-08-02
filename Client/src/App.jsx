@@ -15,6 +15,7 @@ import theme from "./assets/theme";
 import Messages from './pages/Messages';
 import UserProfile from './pages/UserProfile';
 import AdminPanel from './pages/AdminPanel';
+import SuperMentorApprovalPanel from './pages/SuperMentorApprovalPanel';
 
 // ProtectedRoute checks for JWT, onboarding status, and user role
 function ProtectedRoute({ children, requireOnboarded, allowedRoles }) {
@@ -144,6 +145,7 @@ function App() {
           }
         />
         <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminPanel /></ProtectedRoute>} />
+        <Route path="/super-mentor-approval-panel-2025" element={<SuperMentorApprovalPanel />} />
       </Routes>
     </Router>
     </ThemeProvider>
