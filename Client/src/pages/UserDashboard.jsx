@@ -30,6 +30,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 
 const features = [
   {
@@ -243,6 +244,7 @@ const mockLeaderboard = [
 ];
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
   const theme = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [journey, setJourney] = useState(null);
@@ -378,17 +380,17 @@ const UserDashboard = () => {
           </Typography>
           {/* Navigation for different roles */}
           {currentUserRole === 'mentor' && (
-            <Button color="inherit" href="/mentor-dashboard">
+            <Button color="inherit" onClick={() => navigate('/mentor-dashboard')}>
               Mentor Dashboard
             </Button>
           )}
           {currentUserRole === 'therapist' && (
-            <Button color="inherit" href="/therapist-dashboard">
+            <Button color="inherit" onClick={() => navigate('/therapist-dashboard')}>
               Therapist Dashboard
             </Button>
           )}
           {/* Example: A generic profile link always visible */}
-          <Button color="inherit" href="/profile">
+          <Button color="inherit" onClick={() => navigate('/profile')}>
             Profile
           </Button>
         </Toolbar>
