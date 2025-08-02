@@ -5,8 +5,6 @@ import Sidebar from '../components/dashboard/sidebar';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-const API_BASE = '/api/mentorship/messages';
-
 const Messages = () => {
   const { userId: paramUserId } = useParams();
   const [conversations, setConversations] = useState([]);
@@ -16,6 +14,10 @@ const Messages = () => {
   const [tab, setTab] = useState(0);
   const [mentors, setMentors] = useState([]);
   const [mentorError, setMentorError] = useState(null);
+
+  // Get user role to determine API path
+  const userRole = localStorage.getItem('role');
+  const API_BASE = userRole === 'mentor' || userRole === 'therapist' ? '/api/mentorship/messages' : '/api/users/messages';
 
   useEffect(() => {
     fetchInbox();

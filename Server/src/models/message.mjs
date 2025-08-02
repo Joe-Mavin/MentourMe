@@ -1,11 +1,12 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.mjs";
 import User from "./user.mjs";
+import { v4 as uuidv4 } from 'uuid';
 
 const Message = sequelize.define("Message", {
   id: {
     type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    defaultValue: () => uuidv4(),
     primaryKey: true,
   },
   senderId: {
