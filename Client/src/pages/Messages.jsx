@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { Box } from '@mui/material';
-import Sidebar from '../components/dashboard/sidebar';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import DashboardLayout from '../components/dashboard/UserDashboard/DashboardLayout';
 import ConversationList from '../components/messages/ConversationList';
 import ChatInterface from '../components/messages/ChatInterface';
 import { useMessages } from '../hooks/useMessages';
@@ -9,6 +9,18 @@ import { useParams } from 'react-router-dom';
 const Messages = () => {
   const { userId: paramUserId } = useParams();
   const messagesData = useMessages();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Debug logging
+  console.log("Messages page loaded");
+
+  // Get current user name and role from localStorage
+  const currentUser = localStorage.getItem('name');
+  const currentUserRole = localStorage.getItem('role');
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   useEffect(() => {
     if (paramUserId && (!messagesData.selectedUser || messagesData.selectedUser.id !== paramUserId)) {
@@ -18,9 +30,13 @@ const Messages = () => {
   }, [paramUserId, messagesData.conversations, messagesData.selectedUser]);
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Sidebar />
-      <Box sx={{ flex: 1, display: 'flex', height: '100vh' }}>
+    <DashboardLayout
+      currentUser={currentUser}
+      currentUserRole={currentUserRole}
+      mobileOpen={mobileOpen}
+      onDrawerToggle={handleDrawerToggle}
+    >
+      <Box sx={{ display: 'flex', height: 'calc(100vh - 120px)' }}>
         <ConversationList
           tab={messagesData.tab}
           setTab={messagesData.setTab}
@@ -39,7 +55,7 @@ const Messages = () => {
           paramUserId={paramUserId}
         />
       </Box>
-    </Box>
+    </DashboardLayout>
   );
 };
 
