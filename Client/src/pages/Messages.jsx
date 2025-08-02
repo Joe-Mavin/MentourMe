@@ -5,6 +5,19 @@ import Sidebar from '../components/dashboard/sidebar';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+// Helper function to decode JWT and get user ID
+const getUserIdFromToken = () => {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.id;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
+};
+
 const Messages = () => {
   const { userId: paramUserId } = useParams();
   const [conversations, setConversations] = useState([]);
@@ -133,14 +146,17 @@ const Messages = () => {
               <Typography variant="h6" gutterBottom>Chat with {selectedUser.name}</Typography>
               <Divider sx={{ mb: 2 }} />
               <Box sx={{ flex: 1, overflowY: 'auto', mb: 2 }}>
-                {messages.map(msg => (
-                  <Box key={msg.id} sx={{ mb: 1, textAlign: msg.senderId === localStorage.getItem('userId') ? 'right' : 'left' }}>
-                    <Paper sx={{ display: 'inline-block', p: 1.5, bgcolor: msg.senderId === localStorage.getItem('userId') ? 'primary.light' : 'grey.100' }}>
-                      <Typography variant="body2">{msg.content}</Typography>
-                      <Typography variant="caption" color="text.secondary">{new Date(msg.createdAt).toLocaleString()}</Typography>
-                    </Paper>
-                  </Box>
-                ))}
+                {messages.map(msg => {
+                  const currentUserId = getUserIdFromToken();
+                  return (
+                    <Box key={msg.id} sx={{ mb: 1, textAlign: msg.senderId === currentUserId ? 'right' : 'left' }}>
+                      <Paper sx={{ display: 'inline-block', p: 1.5, bgcolor: msg.senderId === currentUserId ? 'primary.light' : 'grey.100' }}>
+                        <Typography variant="body2">{msg.content}</Typography>
+                        <Typography variant="caption" color="text.secondary">{new Date(msg.createdAt).toLocaleString()}</Typography>
+                      </Paper>
+                    </Box>
+                  );
+                })}
               </Box>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <TextField
