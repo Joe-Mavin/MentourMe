@@ -104,89 +104,92 @@ const Messages = () => {
   };
 
   return (
-    <Box sx={{ flex: 1, display: 'flex', height: '100vh' }}>
-      <Paper sx={{ width: 320, borderRadius: 0, boxShadow: 2, overflowY: 'auto' }}>
-        <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="fullWidth">
-          <Tab label="Conversations" />
-          <Tab label="Mentors" />
-        </Tabs>
-        <Divider />
-        {tab === 0 ? (
-          <List>
-            {conversations.map(user => (
-              <ListItem button key={user.id} selected={selectedUser?.id === user.id} onClick={() => fetchConversation(user.id)}>
-                <ListItemAvatar>
-                  <Link to={`/profile/${user.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
-                    <Avatar src={user.profilePicture} />
-                  </Link>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={<Link to={`/profile/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{user.name}</Link>}
-                  secondary={user.role}
+    <Box sx={{ display: 'flex' }}>
+      <Sidebar />
+      <Box sx={{ flex: 1, display: 'flex', height: '100vh' }}>
+        <Paper sx={{ width: 320, borderRadius: 0, boxShadow: 2, overflowY: 'auto' }}>
+          <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="fullWidth">
+            <Tab label="Conversations" />
+            <Tab label="Mentors" />
+          </Tabs>
+          <Divider />
+          {tab === 0 ? (
+            <List>
+              {conversations.map(user => (
+                <ListItem button key={user.id} selected={selectedUser?.id === user.id} onClick={() => fetchConversation(user.id)}>
+                  <ListItemAvatar>
+                    <Link to={`/profile/${user.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
+                      <Avatar src={user.profilePicture} />
+                    </Link>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={<Link to={`/profile/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{user.name}</Link>}
+                    secondary={user.role}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <>
+              {mentorError ? (
+                <Typography color="error" sx={{ p: 2 }}>{mentorError}</Typography>
+              ) : mentors.length === 0 ? (
+                <Typography color="text.secondary" sx={{ p: 2 }}>No mentors found.</Typography>
+              ) : (
+                <List>
+                  {mentors.map(mentor => (
+                    <ListItem button key={mentor.id} selected={selectedUser?.id === mentor.id} onClick={() => fetchConversation(mentor.id)}>
+                      <ListItemAvatar>
+                        <Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
+                          <Avatar src={mentor.profilePicture} />
+                        </Link>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={<Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{mentor.name}</Link>}
+                        secondary={mentor.bio}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </>
+          )}
+        </Paper>
+        <Box sx={{ flex: 1, p: 3, display: 'flex', flexDirection: 'column', height: '100vh' }}>
+          {selectedUser ? (
+            <>
+              <Typography variant="h6" gutterBottom>Chat with {selectedUser.name}</Typography>
+              <Divider sx={{ mb: 2 }} />
+              <Box sx={{ flex: 1, overflowY: 'auto', mb: 2 }}>
+                {messages.map(msg => {
+                  const currentUserId = getUserIdFromToken();
+                  return (
+                    <Box key={msg.id} sx={{ mb: 1, textAlign: msg.senderId === currentUserId ? 'right' : 'left' }}>
+                      <Paper sx={{ display: 'inline-block', p: 1.5, bgcolor: msg.senderId === currentUserId ? 'primary.light' : 'grey.100' }}>
+                        <Typography variant="body2">{msg.content}</Typography>
+                        <Typography variant="caption" color="text.secondary">{new Date(msg.createdAt).toLocaleString()}</Typography>
+                      </Paper>
+                    </Box>
+                  );
+                })}
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <TextField
+                  fullWidth
+                  placeholder="Type a message..."
+                  value={newMessage}
+                  onChange={e => setNewMessage(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
                 />
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <>
-            {mentorError ? (
-              <Typography color="error" sx={{ p: 2 }}>{mentorError}</Typography>
-            ) : mentors.length === 0 ? (
-              <Typography color="text.secondary" sx={{ p: 2 }}>No mentors found.</Typography>
-            ) : (
-              <List>
-                {mentors.map(mentor => (
-                  <ListItem button key={mentor.id} selected={selectedUser?.id === mentor.id} onClick={() => fetchConversation(mentor.id)}>
-                    <ListItemAvatar>
-                      <Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none' }} onClick={e => e.stopPropagation()}>
-                        <Avatar src={mentor.profilePicture} />
-                      </Link>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={<Link to={`/profile/${mentor.id}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={e => e.stopPropagation()}>{mentor.name}</Link>}
-                      secondary={mentor.bio}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            )}
-          </>
-        )}
-      </Paper>
-      <Box sx={{ flex: 1, p: 3, display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        {selectedUser ? (
-          <>
-            <Typography variant="h6" gutterBottom>Chat with {selectedUser.name}</Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Box sx={{ flex: 1, overflowY: 'auto', mb: 2 }}>
-              {messages.map(msg => {
-                const currentUserId = getUserIdFromToken();
-                return (
-                  <Box key={msg.id} sx={{ mb: 1, textAlign: msg.senderId === currentUserId ? 'right' : 'left' }}>
-                    <Paper sx={{ display: 'inline-block', p: 1.5, bgcolor: msg.senderId === currentUserId ? 'primary.light' : 'grey.100' }}>
-                      <Typography variant="body2">{msg.content}</Typography>
-                      <Typography variant="caption" color="text.secondary">{new Date(msg.createdAt).toLocaleString()}</Typography>
-                    </Paper>
-                  </Box>
-                );
-              })}
-            </Box>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <TextField
-                fullWidth
-                placeholder="Type a message..."
-                value={newMessage}
-                onChange={e => setNewMessage(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
-              />
-              <Button variant="contained" onClick={handleSend}>Send</Button>
-            </Box>
-          </>
-        ) : (
-          <Typography variant="body1" color="text.secondary">
-            {paramUserId ? 'No conversation found yet. Start a new message!' : 'Select a conversation to start chatting.'}
-          </Typography>
-        )}
+                <Button variant="contained" onClick={handleSend}>Send</Button>
+              </Box>
+            </>
+          ) : (
+            <Typography variant="body1" color="text.secondary">
+              {paramUserId ? 'No conversation found yet. Start a new message!' : 'Select a conversation to start chatting.'}
+            </Typography>
+          )}
+        </Box>
       </Box>
     </Box>
   );
