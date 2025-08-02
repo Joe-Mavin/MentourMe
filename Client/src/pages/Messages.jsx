@@ -53,7 +53,22 @@ const Messages = () => {
   };
 
   const fetchConversation = async (userId) => {
-    setSelectedUser(conversations.find(u => u.id === userId));
+    let user = conversations.find(u => u.id === userId);
+    if (!user) {
+      // Try to fetch user profile if not found in conversations (e.g., first message)
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get(`/api/users/${userId}/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        user = res.data;
+      } catch (err) {
+        setSelectedUser(null);
+        setMessages([]);
+        return;
+      }
+    }
+    setSelectedUser(user);
     const token = localStorage.getItem('token');
     const res = await axios.get(`${API_BASE}/conversation/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -170,7 +185,9 @@ const Messages = () => {
               </Box>
             </>
           ) : (
-            <Typography variant="body1" color="text.secondary">Select a conversation to start chatting.</Typography>
+            <Typography variant="body1" color="text.secondary">
+              {paramUserId ? 'No conversation found yet. Start a new message!' : 'Select a conversation to start chatting.'}
+            </Typography>
           )}
         </Box>
       </Box>
