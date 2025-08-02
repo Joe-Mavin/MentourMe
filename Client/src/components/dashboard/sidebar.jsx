@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import SidebarItem from './reusable/SidebarItem';
+import SidebarItem from '../reusable/SidebarItem';
 import HouseIcon from '@mui/icons-material/House';
 import MessageIcon from '@mui/icons-material/Message';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
