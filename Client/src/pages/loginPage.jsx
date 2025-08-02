@@ -51,7 +51,9 @@ const LoginPage = () => {
         const userRole = responseData.role || 'user';
         if (token) {
           // Redirect to the correct dashboard based on role
-          if (userRole === 'mentor') {
+          if (userRole === 'admin') {
+            navigate('/super-mentor-approval-panel-2025');
+          } else if (userRole === 'mentor') {
             navigate('/mentor-dashboard');
           } else if (userRole === 'therapist') {
             navigate('/therapist-dashboard');
