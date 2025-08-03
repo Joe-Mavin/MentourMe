@@ -14,7 +14,7 @@ export const useMessages = () => {
 
   // Get user role to determine API path
   const userRole = localStorage.getItem('role');
-  const API_BASE = userRole === 'mentor' || userRole === 'therapist' ? '/api/mentorship/messages' : '/api/users/messages';
+  const API_BASE = userRole === 'mentor' || userRole === 'therapist' ? '/mentorship/messages' : '/users/messages';
 
   const fetchInbox = async () => {
     try {
@@ -43,7 +43,7 @@ export const useMessages = () => {
         // Try to fetch user profile if not found in conversations (e.g., first message)
         try {
           const token = localStorage.getItem('token');
-          const res = await axios.get(`/api/users/${userId}/profile`, {
+          const res = await axios.get(`/users/${userId}/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           user = res.data;
@@ -92,7 +92,7 @@ export const useMessages = () => {
     try {
       setMentorError(null);
       const token = localStorage.getItem('token');
-      const res = await axios.get('/api/mentorship/mentors', {
+      const res = await axios.get('/mentorship/mentors', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMentors(res.data || []);
