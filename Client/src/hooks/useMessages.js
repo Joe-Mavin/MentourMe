@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../services/api';
 
 export const useMessages = () => {
   const [conversations, setConversations] = useState([]);
@@ -20,10 +20,7 @@ export const useMessages = () => {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem('token');
-      const res = await axios.get(`${API_BASE}/inbox`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await API.get(`${API_BASE}/inbox`);
       setConversations(res.data || []);
     } catch (err) {
       console.error('Failed to fetch inbox:', err);
@@ -42,10 +39,7 @@ export const useMessages = () => {
       if (!user) {
         // Try to fetch user profile if not found in conversations (e.g., first message)
         try {
-          const token = localStorage.getItem('token');
-          const res = await axios.get(`/users/${userId}/profile`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const res = await API.get(`/users/${userId}/profile`);
           user = res.data;
         } catch (err) {
           console.error('Failed to fetch user profile:', err);
@@ -55,10 +49,7 @@ export const useMessages = () => {
         }
       }
       setSelectedUser(user);
-      const token = localStorage.getItem('token');
-      const res = await axios.get(`${API_BASE}/conversation/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await API.get(`${API_BASE}/conversation/${userId}`);
       setMessages(res.data || []);
     } catch (err) {
       console.error('Failed to fetch conversation:', err);
@@ -73,12 +64,9 @@ export const useMessages = () => {
     if (!newMessage.trim() || !selectedUser) return;
     try {
       setError(null);
-      const token = localStorage.getItem('token');
-      await axios.post(`${API_BASE}`, {
+      await API.post(`${API_BASE}`, {
         receiverId: selectedUser.id,
         content: newMessage,
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
       });
       setNewMessage('');
       fetchConversation(selectedUser.id);
@@ -91,10 +79,7 @@ export const useMessages = () => {
   const fetchMentors = async () => {
     try {
       setMentorError(null);
-      const token = localStorage.getItem('token');
-      const res = await axios.get('/mentorship/mentors', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await API.get('/mentorship/mentors');
       setMentors(res.data || []);
     } catch (err) {
       console.error('Failed to fetch mentors:', err);
