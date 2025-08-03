@@ -14,7 +14,8 @@ export const useMessages = () => {
 
   // Get user role to determine API path
   const userRole = localStorage.getItem('role');
-  const API_BASE = userRole === 'mentor' || userRole === 'therapist' ? '/mentorship/messages' : '/users/messages';
+  // Both users and mentors use the same message endpoints
+  const API_BASE = '/users/messages';
 
   const fetchInbox = async () => {
     try {
