@@ -10,6 +10,11 @@ API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('API Request:', config.method?.toUpperCase(), config.url);
+    console.log('Authorization header set:', !!config.headers.Authorization);
+  } else {
+    console.log('API Request:', config.method?.toUpperCase(), config.url);
+    console.log('No token found in localStorage');
   }
   return config;
 });

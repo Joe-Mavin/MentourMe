@@ -17,14 +17,39 @@ export const useMessages = () => {
   // Both users and mentors use the same message endpoints
   const API_BASE = '/users/messages';
 
+  // Helper function to test JWT token
+  const testToken = (token) => {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('Token payload:', payload);
+      console.log('Token expires at:', new Date(payload.exp * 1000));
+      console.log('Token is expired:', Date.now() > payload.exp * 1000);
+      return payload;
+    } catch (error) {
+      console.error('Failed to decode token:', error);
+      return null;
+    }
+  };
+
   const fetchInbox = async () => {
     try {
       setLoading(true);
       setError(null);
+      
+      // Debug: Check if token exists and is valid
+      const token = localStorage.getItem('token');
+      console.log('Token exists:', !!token);
+      console.log('Token length:', token ? token.length : 0);
+      
+      if (token) {
+        testToken(token);
+      }
+      
       const res = await API.get(`${API_BASE}/inbox`);
       setConversations(res.data || []);
     } catch (err) {
       console.error('Failed to fetch inbox:', err);
+      console.error('Error response:', err.response?.data);
       setError('Failed to load messages. Please try again later.');
       setConversations([]);
     } finally {
