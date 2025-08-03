@@ -1,6 +1,7 @@
 import Message from '../models/message.mjs';
 import User from '../models/user.mjs';
 import jwt from 'jsonwebtoken';
+import { Op } from 'sequelize';
 
 // Helper to get user ID from JWT
 function getUserIdFromReq(req) {
@@ -54,7 +55,7 @@ export const getConversation = async (req, res) => {
     
     const messages = await Message.findAll({
       where: {
-        [Message.sequelize.Op.or]: [
+        [Op.or]: [
           { senderId: userId, receiverId: otherId },
           { senderId: otherId, receiverId: userId },
         ],
@@ -80,7 +81,7 @@ export const getInbox = async (req, res) => {
     // Get all messages this user has sent or received
     const messages = await Message.findAll({
       where: {
-        [Message.sequelize.Op.or]: [
+        [Op.or]: [
           { senderId: userId },
           { receiverId: userId },
         ],
