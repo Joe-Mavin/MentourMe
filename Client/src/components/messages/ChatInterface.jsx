@@ -4,7 +4,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 
 const ChatInterface = ({ 
   selectedUser, 
-  messages, 
+  messages = [], 
   newMessage, 
   setNewMessage, 
   onSendMessage,
@@ -23,6 +23,9 @@ const ChatInterface = ({
     }
   };
 
+  // Ensure messages is an array
+  const safeMessages = Array.isArray(messages) ? messages : [];
+
   return (
     <Box sx={{ flex: 1, p: 3, display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {selectedUser ? (
@@ -30,7 +33,7 @@ const ChatInterface = ({
           <Typography variant="h6" gutterBottom>Chat with {selectedUser.name}</Typography>
           <Divider sx={{ mb: 2 }} />
           <Box sx={{ flex: 1, overflowY: 'auto', mb: 2 }}>
-            {messages.map(msg => {
+            {safeMessages.map(msg => {
               const currentUserId = getUserIdFromToken();
               return (
                 <Box key={msg.id} sx={{ mb: 1, textAlign: msg.senderId === currentUserId ? 'right' : 'left' }}>

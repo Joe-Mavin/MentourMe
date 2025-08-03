@@ -5,12 +5,16 @@ import { Link } from 'react-router-dom';
 const ConversationList = ({ 
   tab, 
   setTab, 
-  conversations, 
-  mentors, 
+  conversations = [], 
+  mentors = [], 
   mentorError, 
   selectedUser, 
   onSelectConversation 
 }) => {
+  // Ensure conversations and mentors are arrays
+  const safeConversations = Array.isArray(conversations) ? conversations : [];
+  const safeMentors = Array.isArray(mentors) ? mentors : [];
+
   return (
     <Paper sx={{ width: 320, borderRadius: 0, boxShadow: 2, overflowY: 'auto' }}>
       <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="fullWidth">
@@ -19,7 +23,7 @@ const ConversationList = ({
       </Tabs>
       <Divider />
       {tab === 0 ? (
-        conversations.length === 0 ? (
+        safeConversations.length === 0 ? (
           <Box sx={{ p: 3, textAlign: 'center' }}>
             <Typography color="text.secondary" sx={{ mb: 2 }}>
               You have no conversations yet.
@@ -30,7 +34,7 @@ const ConversationList = ({
           </Box>
         ) : (
           <List>
-            {conversations.map(user => (
+            {safeConversations.map(user => (
               <ListItem 
                 button 
                 key={user.id} 
@@ -58,7 +62,7 @@ const ConversationList = ({
         <>
           {mentorError ? (
             <Typography color="error" sx={{ p: 2 }}>{mentorError}</Typography>
-          ) : mentors.length === 0 ? (
+          ) : safeMentors.length === 0 ? (
             <Box sx={{ p: 3, textAlign: 'center' }}>
               <Typography color="text.secondary" sx={{ mb: 2 }}>
                 No mentors found.
@@ -69,7 +73,7 @@ const ConversationList = ({
             </Box>
           ) : (
             <List>
-              {mentors.map(mentor => (
+              {safeMentors.map(mentor => (
                 <ListItem 
                   button 
                   key={mentor.id} 
