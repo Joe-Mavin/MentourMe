@@ -45,6 +45,10 @@ const LoginPage = () => {
         if (responseData.role) {
           localStorage.setItem('role', responseData.role);
         }
+        // Store user name
+        if (responseData.name) {
+          localStorage.setItem('name', responseData.name);
+        }
 
         // After successful login, check if the token is available
         const token = localStorage.getItem("token");
