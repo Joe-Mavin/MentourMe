@@ -5,7 +5,22 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const SidebarItem = ({ icon, label, route, onClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isActive = route && location.pathname === route;
+  
+  // Handle active state for role-based routes
+  const getIsActive = () => {
+    if (!route) return false;
+    
+    const userRole = localStorage.getItem('role');
+    if (userRole === 'mentor') {
+      // For mentors, check mentor-specific routes
+      if (route === '/messages' && location.pathname === '/mentor-messages') return true;
+      if (route === '/profile' && location.pathname === '/mentor-profile') return true;
+    }
+    
+    return location.pathname === route;
+  };
+  
+  const isActive = getIsActive();
 
   const handleClick = () => {
     if (onClick) {

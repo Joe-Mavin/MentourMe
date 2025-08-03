@@ -78,7 +78,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* Unified Dashboard Route - handles all sidebar navigation */}
+        {/* User Dashboard Routes - Unified Layout */}
         <Route
           path="/dashboard"
           element={
@@ -119,9 +119,25 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* New Mentor and Therapist Dashboards */}
+        {/* Mentor and Therapist Dashboards - Separate Layouts */}
         <Route
           path="/mentor-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['mentor']}>
+              <MentorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mentor-messages"
+          element={
+            <ProtectedRoute allowedRoles={['mentor']}>
+              <MentorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mentor-profile"
           element={
             <ProtectedRoute allowedRoles={['mentor']}>
               <MentorDashboard />
