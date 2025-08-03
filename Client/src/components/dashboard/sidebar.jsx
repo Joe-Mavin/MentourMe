@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Typography, useTheme, Paper, Button } from "@mui/material";
 import SidebarItem from "../reusable/SidebarItem";
 import HouseIcon from "@mui/icons-material/House";
-import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -12,13 +11,10 @@ import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import ChatIcon from '@mui/icons-material/Chat';
-import { useState } from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Sidebar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [connectOpen, setConnectOpen] = useState(false);
   const isAdmin = localStorage.getItem('role') === 'admin';
 
   const handleLogout = () => {
@@ -65,32 +61,7 @@ const Sidebar = () => {
       {/* Sidebar Items */}
       <Box sx={{ width: '100%', flex: 1 }}>
         <SidebarItem icon={<HouseIcon />} label="Dashboard" route="/dashboard" />
-        <Box>
-          <Button
-            startIcon={<ConnectWithoutContactIcon />}
-            endIcon={<ExpandMoreIcon />}
-            onClick={() => setConnectOpen(!connectOpen)}
-            sx={{
-              width: '100%',
-              justifyContent: 'flex-start',
-              color: theme.palette.text.primary,
-              fontWeight: 700,
-              borderRadius: 2,
-              mb: 1,
-              textTransform: 'none',
-              pl: 1.5,
-            }}
-            aria-label="Connect menu"
-          >
-            Connect
-          </Button>
-          {connectOpen && (
-            <Box sx={{ pl: 4 }}>
-              <SidebarItem icon={<ChatIcon />} label="Messages" route="/messages" />
-              {/* Future: <SidebarItem icon={<VideoCallIcon />} label="Video Call" route="/video-call" /> */}
-            </Box>
-          )}
-        </Box>
+        <SidebarItem icon={<ChatIcon />} label="Messages" route="/messages" />
         <SidebarItem icon={<SmartToyIcon />} label="Bot" route="/onboard"/>
         <SidebarItem icon={<PersonIcon />} label="Profile" route="/profile" />
         <SidebarItem icon={<SettingsIcon />} label="Settings" />
