@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../../services/api";
 import {
   Box,
   Typography,
@@ -28,13 +28,13 @@ export default function MentorDashboardContent() {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios.get("/api/users/profile", { withCredentials: true })
+    API.get("/api/users/profile")
       .then(res => setProfile(res.data.user))
       .catch(() => setProfile(null));
-    axios.get(`${API_BASE}/mentor-dashboard`, { withCredentials: true })
+    API.get(`${API_BASE}/mentor-dashboard`)
       .then(res => setMentees(res.data.mentees || []))
       .catch(() => setMentees([]));
-    axios.get(`${API_BASE}/specializations`)
+    API.get(`${API_BASE}/specializations`)
       .then(res => setSpecializations(res.data))
       .catch(() => setSpecializations([]));
   }, []);
