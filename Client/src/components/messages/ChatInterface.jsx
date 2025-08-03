@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, Divider, TextField, Button, Paper } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
 
 const ChatInterface = ({ 
   selectedUser, 
@@ -59,9 +60,15 @@ const ChatInterface = ({
           </Box>
         </>
       ) : (
-        <Typography variant="body1" color="text.secondary">
-          {paramUserId ? 'No conversation found yet. Start a new message!' : 'Select a conversation to start chatting.'}
-        </Typography>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'text.secondary' }}>
+          <ChatIcon sx={{ fontSize: 64, mb: 2, color: 'primary.main' }} />
+          <Typography variant="h6" gutterBottom>
+            {paramUserId ? 'No conversation found yet. Start a new message!' : 'Select a conversation to start chatting.'}
+          </Typography>
+          <Typography variant="body2">
+            Your messages will appear here once you start a conversation.
+          </Typography>
+        </Box>
       )}
     </Box>
   );
