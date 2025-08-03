@@ -35,9 +35,9 @@ export default function MentorDashboardContent() {
     setLoading(true);
     setError(null);
     Promise.all([
-      API.get("/api/users/profile").then(res => setProfile(res.data.user)),
-      API.get(`${API_BASE}/mentor-dashboard`).then(res => setMentees(res.data.mentees || [])),
-      API.get(`${API_BASE}/specializations`).then(res => setSpecializations(res.data))
+      API.get("/users/profile").then(res => setProfile(res.data.user)),
+      API.get("/mentorship/mentor-dashboard").then(res => setMentees(res.data.mentees || [])),
+      API.get("/mentorship/specializations").then(res => setSpecializations(res.data))
     ]).catch((err) => {
       setError("Failed to load dashboard data. Please check your connection or login status.");
     }).finally(() => {
