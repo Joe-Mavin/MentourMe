@@ -76,7 +76,7 @@ const DashboardLayout = ({
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
-          <Sidebar handleDrawerToggle={onDrawerToggle} />
+          <Sidebar />
         </Drawer>
       </Hidden>
       <Hidden smDown implementation="css">
@@ -88,7 +88,7 @@ const DashboardLayout = ({
           }}
           open
         >
-          <Sidebar handleDrawerToggle={onDrawerToggle} />
+          <Sidebar />
         </Drawer>
       </Hidden>
       <Box

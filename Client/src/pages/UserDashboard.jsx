@@ -67,9 +67,9 @@ const UserDashboard = () => {
           elevation={6} 
           variant="filled"
         >
-            {snackbar.message}
-          </MuiAlert>
-        </Snackbar>
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
     </DashboardLayout>
   );
 };
