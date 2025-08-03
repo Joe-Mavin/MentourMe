@@ -5,8 +5,7 @@ import LandingPage from "./pages/landing-page";
 import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate } from "react-router-dom";
 import SignUpPage from "./pages/UserSignUp";
 import LoginPage from "./pages/loginPage";
-import UserDashboard from "./pages/UserDashboard";
-import ProfilePage from "./pages/ProfilePage";
+import Dashboard from "./pages/Dashboard";
 import JourneyPage from "./pages/JourneyPage";
 import OnboardingContainer from "./components/Bot/Onboarding/OnboardingContainer";
 import MentorDashboard from "./pages/MentorDashboard"; // Import MentorDashboard
@@ -14,7 +13,6 @@ import TherapistDashboard from "./pages/TherapistDashboard"; // Import Therapist
 import MentorOnboardingContainer from './components/Bot/Onboarding/MentorOnboardingContainer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
-import Messages from './pages/Messages';
 import UserProfile from './pages/UserProfile';
 import SuperMentorApprovalPanel from './pages/SuperMentorApprovalPanel';
 
@@ -80,11 +78,20 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Unified Dashboard Route - handles all sidebar navigation */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute requireOnboarded={true} allowedRoles={['user']}>
-              <UserDashboard />
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/messages"
+          element={
+            <ProtectedRoute allowedRoles={["user", "mentor", "therapist"]}>
+              <Dashboard />
             </ProtectedRoute>
           }
         />
@@ -92,7 +99,15 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute requireOnboarded={true} allowedRoles={['user', 'mentor', 'therapist']}>
-              <ProfilePage />
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/journey"
+          element={
+            <ProtectedRoute requireOnboarded={true} allowedRoles={['user']}>
+              <Dashboard />
             </ProtectedRoute>
           }
         />
@@ -101,22 +116,6 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["user", "mentor", "therapist"]}>
               <UserProfile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/journey"
-          element={
-            <ProtectedRoute requireOnboarded={true} allowedRoles={['user']}>
-              <JourneyPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/messages"
-          element={
-            <ProtectedRoute allowedRoles={["user", "mentor", "therapist"]}>
-              <Messages />
             </ProtectedRoute>
           }
         />

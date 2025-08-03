@@ -7,7 +7,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -15,12 +15,20 @@ import ChatIcon from '@mui/icons-material/Chat';
 const Sidebar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const isAdmin = localStorage.getItem('role') === 'admin';
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('onboarded');
     navigate('/login');
+  };
+
+  // Handle sidebar item clicks with client-side navigation
+  const handleSidebarItemClick = (route) => {
+    if (route) {
+      navigate(route);
+    }
   };
 
   return (
@@ -60,10 +68,36 @@ const Sidebar = () => {
 
       {/* Sidebar Items */}
       <Box sx={{ width: '100%', flex: 1 }}>
-        <SidebarItem icon={<HouseIcon />} label="Dashboard" route="/dashboard" />
-        <SidebarItem icon={<ChatIcon />} label="Messages" route="/messages" />
-        <SidebarItem icon={<SmartToyIcon />} label="Bot" route="/onboard"/>
-        <SidebarItem icon={<PersonIcon />} label="Profile" route="/profile" />
+        <SidebarItem 
+          icon={<HouseIcon />} 
+          label="Dashboard" 
+          route="/dashboard" 
+          onClick={() => handleSidebarItemClick('/dashboard')}
+        />
+        <SidebarItem 
+          icon={<ChatIcon />} 
+          label="Messages" 
+          route="/messages" 
+          onClick={() => handleSidebarItemClick('/messages')}
+        />
+        <SidebarItem 
+          icon={<TimelineIcon />} 
+          label="Journey" 
+          route="/journey" 
+          onClick={() => handleSidebarItemClick('/journey')}
+        />
+        <SidebarItem 
+          icon={<SmartToyIcon />} 
+          label="Bot" 
+          route="/onboard"
+          onClick={() => handleSidebarItemClick('/onboard')}
+        />
+        <SidebarItem 
+          icon={<PersonIcon />} 
+          label="Profile" 
+          route="/profile" 
+          onClick={() => handleSidebarItemClick('/profile')}
+        />
         <SidebarItem icon={<SettingsIcon />} label="Settings" />
         {isAdmin && <SidebarItem icon={<SettingsIcon />} label="Admin Panel" route="/admin" />}
         <SidebarItem icon={<ContactEmergencyIcon />} label="Mentor" />

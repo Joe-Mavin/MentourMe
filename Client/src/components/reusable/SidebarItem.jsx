@@ -2,13 +2,15 @@ import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const SidebarItem = ({ icon, label, route }) => {
+const SidebarItem = ({ icon, label, route, onClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isActive = route && location.pathname === route;
 
   const handleClick = () => {
-    if (route) {
+    if (onClick) {
+      onClick();
+    } else if (route) {
       navigate(route);
     }
   };

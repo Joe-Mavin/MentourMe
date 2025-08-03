@@ -1,7 +1,7 @@
 import React from 'react';
 import UnifiedDashboardLayout from '../components/dashboard/UnifiedDashboardLayout';
 
-const Messages = () => {
+const Dashboard = () => {
   // Get current user name and role from localStorage
   const currentUser = localStorage.getItem('name');
   const currentUserRole = localStorage.getItem('role');
@@ -14,4 +14,4 @@ const Messages = () => {
   );
 };
 
-export default Messages; 
+export default Dashboard; 
