@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/environment";
 
 const API = axios.create({
-  baseURL: "http://localhost:5001", // Adjust to match your backend URL
+  baseURL: API_BASE_URL, // Use environment variable for base URL
 });
 
 // Add an authorization header if the user is logged in
