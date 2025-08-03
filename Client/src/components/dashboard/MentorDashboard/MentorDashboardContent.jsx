@@ -11,7 +11,9 @@ import {
   Chip,
   Divider,
   Badge,
-  TextField
+  TextField,
+  CircularProgress,
+  Alert
 } from "@mui/material";
 import StarIcon from '@mui/icons-material/Star';
 import EmailIcon from '@mui/icons-material/Email';
@@ -26,22 +28,42 @@ export default function MentorDashboardContent() {
   const [mentees, setMentees] = useState([]);
   const [specializations, setSpecializations] = useState([]);
   const [filter, setFilter] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    API.get("/api/users/profile")
-      .then(res => setProfile(res.data.user))
-      .catch(() => setProfile(null));
-    API.get(`${API_BASE}/mentor-dashboard`)
-      .then(res => setMentees(res.data.mentees || []))
-      .catch(() => setMentees([]));
-    API.get(`${API_BASE}/specializations`)
-      .then(res => setSpecializations(res.data))
-      .catch(() => setSpecializations([]));
+    setLoading(true);
+    setError(null);
+    Promise.all([
+      API.get("/api/users/profile").then(res => setProfile(res.data.user)),
+      API.get(`${API_BASE}/mentor-dashboard`).then(res => setMentees(res.data.mentees || [])),
+      API.get(`${API_BASE}/specializations`).then(res => setSpecializations(res.data))
+    ]).catch((err) => {
+      setError("Failed to load dashboard data. Please check your connection or login status.");
+    }).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   const filteredMentees = mentees.filter(m =>
     m.name.toLowerCase().includes(filter.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ maxWidth: 1100, margin: '0 auto' }}>
