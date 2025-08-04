@@ -1,7 +1,8 @@
 import Message from '../models/message.mjs';
 import User from '../models/user.mjs';
 import jwt from 'jsonwebtoken';
-import { Op } from 'sequelize';
+import Sequelize from 'sequelize';
+const Op = Sequelize.Op;
 
 // Helper to get user ID from JWT
 function getUserIdFromReq(req) {
