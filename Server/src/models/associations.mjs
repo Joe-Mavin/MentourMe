@@ -2,7 +2,6 @@ import User from './user.mjs';
 import Journey from './journey.mjs';
 import Task from './task.mjs';
 import Specialization from './specialization.mjs';
-import './message.mjs';
 
 // User <-> Journey
 User.hasMany(Journey, { foreignKey: 'userId', as: 'journeys' });

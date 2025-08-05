@@ -2,7 +2,6 @@ import { Router } from "express";
 import { getUsers, getProfile, getPublicProfile } from "../controllers/user.controller.mjs";
 import requireAdmin from '../middleware/admin.js';
 import { reviewMentorApplications, approveMentorApplication, rejectMentorApplication, promoteUserToAdmin, deleteUser, listAllUsers } from '../controllers/adminController.mjs';
-import { sendMessage } from '../controllers/messageController.mjs';
 
 const router = Router();
 
@@ -16,7 +15,6 @@ router.post('/admin/promote/:userId', requireAdmin, promoteUserToAdmin);
 router.delete('/admin/delete/:userId', requireAdmin, deleteUser);
 router.get('/admin/users', requireAdmin, listAllUsers);
 
-// Message routes for all users
-router.post('/messages', sendMessage);
+// Message routes removed
 
 export default router;
