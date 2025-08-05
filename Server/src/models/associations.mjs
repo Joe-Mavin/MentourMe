@@ -24,4 +24,4 @@ Message.belongsTo(User, { as: 'receiver', foreignKey: 'receiverId' });
 User.hasMany(Message, { as: 'sentMessages', foreignKey: 'senderId' });
 User.hasMany(Message, { as: 'receivedMessages', foreignKey: 'receiverId' });
 
-export { User, Journey, Task }; 
+export { User, Journey, Task, Message }; 
