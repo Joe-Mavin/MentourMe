@@ -23,9 +23,6 @@ import FeedbackIcon from '@mui/icons-material/Feedback';
 import Sidebar from './sidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import UserDashboardContent from './UserDashboard/UserDashboardContent';
-import ConversationList from '../messages/ConversationList';
-import ChatInterface from '../messages/ChatInterface';
-import { useMessages } from '../../hooks/useMessages';
 import { useJourney } from '../../hooks/useJourney';
 import { useLeaderboard } from '../../hooks/useLeaderboard';
 import { Snackbar } from '@mui/material';
@@ -44,7 +41,6 @@ const UnifiedDashboardLayout = ({ currentUser, currentUserRole }) => {
   // Custom hooks for data management
   const journeyData = useJourney();
   const leaderboardData = useLeaderboard();
-  const messagesData = useMessages();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -78,44 +74,6 @@ const UnifiedDashboardLayout = ({ currentUser, currentUserRole }) => {
             leaderboardData={leaderboardData}
             currentUser={currentUser}
           />
-        );
-      
-      case '/messages':
-        return (
-          <Box sx={{ display: 'flex', height: 'calc(100vh - 120px)' }}>
-            {messagesData.loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-                <Typography>Loading messages...</Typography>
-              </Box>
-            ) : messagesData.error ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', flexDirection: 'column', gap: 2 }}>
-                <Typography color="error">{messagesData.error}</Typography>
-                <Button variant="contained" onClick={messagesData.fetchInbox}>
-                  Retry
-                </Button>
-              </Box>
-            ) : (
-              <>
-                <ConversationList
-                  tab={messagesData.tab}
-                  setTab={messagesData.setTab}
-                  conversations={messagesData.conversations}
-                  mentors={messagesData.mentors}
-                  mentorError={messagesData.mentorError}
-                  selectedUser={messagesData.selectedUser}
-                  onSelectConversation={messagesData.fetchConversation}
-                />
-                <ChatInterface
-                  selectedUser={messagesData.selectedUser}
-                  messages={messagesData.messages}
-                  newMessage={messagesData.newMessage}
-                  setNewMessage={messagesData.setNewMessage}
-                  onSendMessage={messagesData.handleSend}
-                  paramUserId={null}
-                />
-              </>
-            )}
-          </Box>
         );
       
       case '/profile':
