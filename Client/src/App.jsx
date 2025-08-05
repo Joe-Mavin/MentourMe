@@ -8,7 +8,6 @@ import LoginPage from "./pages/loginPage";
 import Dashboard from "./pages/Dashboard";
 import JourneyPage from "./pages/JourneyPage";
 import OnboardingContainer from "./components/Bot/Onboarding/OnboardingContainer";
-import TherapistDashboard from "./pages/TherapistDashboard";
 import MentorOnboardingContainer from './components/Bot/Onboarding/MentorOnboardingContainer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
@@ -148,7 +147,7 @@ function App() {
           path="/therapist-dashboard"
           element={
             <ProtectedRoute allowedRoles={['therapist']}>
-              <TherapistDashboard />
+              <Dashboard />
             </ProtectedRoute>
           }
         />
