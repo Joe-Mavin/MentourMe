@@ -8,8 +8,7 @@ import LoginPage from "./pages/loginPage";
 import Dashboard from "./pages/Dashboard";
 import JourneyPage from "./pages/JourneyPage";
 import OnboardingContainer from "./components/Bot/Onboarding/OnboardingContainer";
-import MentorDashboard from "./pages/MentorDashboard"; // Import MentorDashboard
-import TherapistDashboard from "./pages/TherapistDashboard"; // Import TherapistDashboard
+import TherapistDashboard from "./pages/TherapistDashboard";
 import MentorOnboardingContainer from './components/Bot/Onboarding/MentorOnboardingContainer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
@@ -125,7 +124,7 @@ function App() {
           path="/mentor-dashboard"
           element={
             <ProtectedRoute allowedRoles={['mentor']}>
-              <MentorDashboard />
+              <Dashboard />
             </ProtectedRoute>
           }
         />
@@ -141,7 +140,7 @@ function App() {
           path="/mentor-profile"
           element={
             <ProtectedRoute allowedRoles={['mentor']}>
-              <MentorDashboard />
+              <Dashboard />
             </ProtectedRoute>
           }
         />
