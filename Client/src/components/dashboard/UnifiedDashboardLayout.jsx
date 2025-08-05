@@ -10,6 +10,14 @@ import {
   Hidden,
   Card,
   CardContent,
+  Avatar,
+  Grid,
+  Chip,
+  Divider,
+  Badge,
+  TextField,
+  CircularProgress,
+  Alert
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
@@ -20,25 +28,30 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import StarIcon from '@mui/icons-material/Star';
+import MessageIcon from '@mui/icons-material/Message';
+import EventIcon from '@mui/icons-material/Event';
 import Sidebar from './sidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import UserDashboardContent from './UserDashboard/UserDashboardContent';
+import MentorDashboardContent from './MentorDashboard/MentorDashboardContent';
+import TherapistDashboardContent from './TherapistDashboard/TherapistDashboardContent';
 import { useJourney } from '../../hooks/useJourney';
 import { useLeaderboard } from '../../hooks/useLeaderboard';
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
-import axios from 'axios';
+import API from '../../services/api';
 import { ENDPOINTS } from '../../config/environment';
 
 const drawerWidth = 260;
 
-const UnifiedDashboardLayout = ({ currentUser, currentUserRole }) => {
+const UnifiedDashboardLayout = ({ currentUser, currentUserRole, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  // Custom hooks for data management
+  // Custom hooks for data management (only for users)
   const journeyData = useJourney();
   const leaderboardData = useLeaderboard();
 
@@ -51,7 +64,7 @@ const UnifiedDashboardLayout = ({ currentUser, currentUserRole }) => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  // Handle journey generation with snackbar feedback
+  // Handle journey generation with snackbar feedback (only for users)
   const handleGenerateJourney = async () => {
     const result = await journeyData.generateJourney();
     setSnackbar({
@@ -61,26 +74,50 @@ const UnifiedDashboardLayout = ({ currentUser, currentUserRole }) => {
     });
   };
 
-  // Render content based on current route
+  // Render content based on current route and user role
   const renderContent = () => {
+    // If children are passed (like for Messages), render them
+    if (children) {
+      return children;
+    }
+
     switch (location.pathname) {
       case '/dashboard':
-        return (
-          <UserDashboardContent
-            journeyData={{
-              ...journeyData,
-              generateJourney: handleGenerateJourney,
-            }}
-            leaderboardData={leaderboardData}
-            currentUser={currentUser}
-          />
-        );
+        if (currentUserRole === 'user') {
+          return (
+            <UserDashboardContent
+              journeyData={{
+                ...journeyData,
+                generateJourney: handleGenerateJourney,
+              }}
+              leaderboardData={leaderboardData}
+              currentUser={currentUser}
+            />
+          );
+        }
+        break;
+      
+      case '/mentor-dashboard':
+        if (currentUserRole === 'mentor') {
+          return <MentorDashboardContent />;
+        }
+        break;
+      
+      case '/therapist-dashboard':
+        if (currentUserRole === 'therapist') {
+          return <TherapistDashboardContent />;
+        }
+        break;
       
       case '/profile':
+      case '/mentor-profile':
         return <ProfileContent />;
       
       case '/journey':
-        return <JourneyContent />;
+        if (currentUserRole === 'user') {
+          return <JourneyContent />;
+        }
+        break;
       
       default:
         return (
@@ -113,20 +150,8 @@ const UnifiedDashboardLayout = ({ currentUser, currentUserRole }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Welcome, {currentUser || 'User'}!
+            Welcome, {currentUser || currentUserRole}!
           </Typography>
-          {/* Navigation for different roles */}
-          {currentUserRole === 'mentor' && (
-            <Button color="inherit" onClick={() => navigate('/mentor-dashboard')}>
-              Mentor Dashboard
-            </Button>
-          )}
-          {currentUserRole === 'therapist' && (
-            <Button color="inherit" onClick={() => navigate('/therapist-dashboard')}>
-              Therapist Dashboard
-            </Button>
-          )}
-          {/* Example: A generic profile link always visible */}
           <Button color="inherit" onClick={() => navigate('/profile')}>
             Profile
           </Button>
@@ -167,28 +192,19 @@ const UnifiedDashboardLayout = ({ currentUser, currentUserRole }) => {
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
-          mt: 8,
-          overflow: 'auto',
-          bgcolor: 'background.default',
+          mt: 8
         }}
       >
         {renderContent()}
       </Box>
 
-      {/* Snackbar for feedback */}
-      <Snackbar 
-        open={snackbar.open} 
-        autoHideDuration={3000} 
-        onClose={handleSnackbarClose} 
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <MuiAlert 
-          onClose={handleSnackbarClose} 
-          severity={snackbar.severity} 
-          sx={{ width: '100%' }} 
-          elevation={6} 
-          variant="filled"
-        >
+        <MuiAlert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}
         </MuiAlert>
       </Snackbar>
@@ -198,7 +214,7 @@ const UnifiedDashboardLayout = ({ currentUser, currentUserRole }) => {
 
 // Profile Content Component
 const ProfileContent = () => {
-  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -206,154 +222,95 @@ const ProfileContent = () => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(ENDPOINTS.AUTH.PROFILE, {
-          headers: { Authorization: `Bearer ${token}` },
+        const res = await API.get(ENDPOINTS.AUTH.PROFILE, {
+          headers: { Authorization: `Bearer ${token}` }
         });
-        setUser(res.data.user);
+        setProfile(res.data.user);
       } catch (err) {
         setError('Failed to load profile');
+        console.error('Profile fetch error:', err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchProfile();
   }, []);
 
-  // Helper for avatar initials
   const getInitials = (name) => {
     if (!name) return '';
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
+
   return (
-    <Box minHeight="100vh" display="flex" alignItems="center" justifyContent="center" bgcolor="background.default" px={2}>
-      <Card sx={{ maxWidth: 420, width: '100%', borderRadius: 4, boxShadow: 6, p: 0, overflow: 'hidden' }}>
-        {/* Gradient header with avatar */}
-        <Box sx={{
-          background: 'linear-gradient(90deg, #3a8bfd 0%, #1e40af 100%)',
-          py: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}>
-          <Box sx={{
-            width: 80,
-            height: 80,
-            borderRadius: '50%',
-            bgcolor: 'background.paper',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: 3,
-            mb: 2,
-          }}>
-            <Typography variant="h3" color="primary" fontWeight={900}>
-              {user ? getInitials(user.name) : <PersonIcon fontSize="large" />}
-            </Typography>
-          </Box>
-          <Typography variant="h5" fontWeight={800} color="#fff">
-            {user ? user.name : 'Profile'}
-          </Typography>
-        </Box>
+    <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+      <Typography variant="h3" fontWeight={900} color="primary" mb={3} textAlign="center">
+        Profile
+      </Typography>
+      
+      <Card sx={{ borderRadius: 4, boxShadow: 6 }}>
         <CardContent>
-          {loading && <Typography>Loading...</Typography>}
-          {error && <Typography color="error">{error}</Typography>}
-          {user && (
-            <Box display="flex" flexDirection="column" gap={2} mt={2}>
-              <Box display="flex" alignItems="center" gap={1}>
-                <EmailIcon color="primary" />
-                <Typography><strong>Email:</strong> {user.email}</Typography>
+          <Grid container spacing={3} alignItems="center">
+            <Grid item xs={12} md={2} textAlign="center">
+              <Avatar
+                src={profile?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name || 'User')}`}
+                alt="Profile"
+                sx={{ width: 100, height: 100, mx: "auto", mb: 2, fontSize: 40 }}
+              >
+                {profile ? getInitials(profile.name) : <PersonIcon fontSize="large" />}
+              </Avatar>
+              <Chip label={profile?.role || 'User'} color="primary" sx={{ mt: 1 }} />
+            </Grid>
+            <Grid item xs={12} md={7}>
+              <Typography variant="h5" fontWeight={800}>{profile?.name}</Typography>
+              <Typography color="text.secondary" mb={1}>{profile?.email}</Typography>
+              <Typography variant="body1" mb={1}><b>Bio:</b> {profile?.bio || "No bio provided."}</Typography>
+              <Typography variant="body1" mb={1}><b>Phone:</b> {profile?.phone || "Not provided"}</Typography>
+              <Typography variant="body1" mb={1}><b>Status:</b> {profile?.status || "Active"}</Typography>
+            </Grid>
+            <Grid item xs={12} md={3} textAlign="center">
+              <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+                <Button variant="outlined" color="primary" startIcon={<EmailIcon />}>
+                  Contact
+                </Button>
+                <Button variant="outlined" color="primary" startIcon={<MessageIcon />}>
+                  Message
+                </Button>
               </Box>
-              <Box display="flex" alignItems="center" gap={1}>
-                <PhoneIcon color="primary" />
-                <Typography><strong>Phone:</strong> {user.phone}</Typography>
-              </Box>
-              <Box display="flex" alignItems="center" gap={1}>
-                {user.onboarded ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
-                <Typography><strong>Onboarded:</strong> {user.onboarded ? 'Yes' : 'No'}</Typography>
-              </Box>
-              <Typography variant="body2" color="text.secondary" mt={2}>
-                Joined: {new Date(user.createdAt).toLocaleDateString()}
-              </Typography>
-            </Box>
-          )}
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
     </Box>
   );
 };
 
-// Journey Content Component
+// Journey Content Component (for users only)
 const JourneyContent = () => {
-  // Mock journey data
-  const journey = {
-    goal: 'Personal Development',
-    startDate: '2024-07-01',
-    totalTasks: 7,
-    completedTasks: 3,
-    tasks: [
-      { day: 1, desc: 'Write down your top 3 personal goals.', done: true },
-      { day: 2, desc: 'Reflect on a recent challenge and how you handled it.', done: true },
-      { day: 3, desc: 'Read a chapter from a self-improvement book.', done: true },
-      { day: 4, desc: 'Practice 10 minutes of mindfulness meditation.', done: false, today: true, due: '2024-07-04' },
-      { day: 5, desc: 'Reach out to a mentor or peer for advice.', done: false },
-      { day: 6, desc: 'Set a new micro-habit for the week.', done: false },
-      { day: 7, desc: 'Review your progress and journal your thoughts.', done: false },
-    ],
-  };
-  const todayTask = journey.tasks.find(t => t.today);
-  const progress = (journey.completedTasks / journey.totalTasks) * 100;
-
   return (
-    <Box minHeight="100vh" display="flex" alignItems="center" justifyContent="center" bgcolor="background.default" px={2}>
-      <Card sx={{ maxWidth: 500, width: '100%', borderRadius: 4, boxShadow: 6, p: 0, overflow: 'hidden' }}>
-        <Box sx={{
-          background: 'linear-gradient(90deg, #3a8bfd 0%, #1e40af 100%)',
-          py: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}>
-          <TimelineIcon sx={{ fontSize: 48, color: '#fff', mb: 1 }} />
-          <Typography variant="h5" fontWeight={800} color="#fff">
-            My Journey: {journey.goal}
-          </Typography>
-          <Box width="80%" mt={2}>
-            <Box sx={{ height: 10, bgcolor: '#1e2a78', borderRadius: 5, overflow: 'hidden' }}>
-              <Box sx={{ width: `${progress}%`, height: '100%', bgcolor: '#3a8bfd', transition: 'width 0.5s' }} />
-            </Box>
-            <Typography variant="body2" color="#fff" mt={1} textAlign="right">
-              {journey.completedTasks} / {journey.totalTasks} steps complete
-            </Typography>
-          </Box>
-        </Box>
-        <CardContent>
-          {todayTask ? (
-            <Box>
-              <Typography variant="h6" fontWeight={700} color="primary" mb={1}>
-                Today's Task
-              </Typography>
-              <Typography mb={2}>{todayTask.desc}</Typography>
-              <Typography variant="body2" color="text.secondary" mb={2}>
-                Due: {todayTask.due}
-              </Typography>
-              <Box display="flex" gap={2}>
-                <Button variant="contained" color="success" startIcon={<CheckCircleIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
-                  Mark as Done
-                </Button>
-                <Button variant="outlined" color="warning" startIcon={<SkipNextIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
-                  Skip
-                </Button>
-                <Button variant="outlined" color="info" startIcon={<FeedbackIcon />} sx={{ borderRadius: 3, fontWeight: 700 }}>
-                  Feedback
-                </Button>
-              </Box>
-            </Box>
-          ) : (
-            <Typography>No task for today. Enjoy your progress!</Typography>
-          )}
-        </CardContent>
-      </Card>
+    <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+      <Typography variant="h3" fontWeight={900} color="primary" mb={3} textAlign="center">
+        Journey
+      </Typography>
+      <Typography variant="body1" textAlign="center">
+        Journey content will be displayed here.
+      </Typography>
     </Box>
   );
 };
