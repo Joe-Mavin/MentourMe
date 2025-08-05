@@ -45,7 +45,7 @@ const UserProfile = () => {
           </Box>
           <Typography variant="body1" mb={2}><b>Bio:</b> {profile.bio || 'No bio provided.'}</Typography>
           <Typography variant="body1" mb={2}><b>Specializations:</b> {profile.specializations?.map(s => s.name).join(', ') || 'None'}</Typography>
-          <Button variant="contained" color="primary" onClick={() => navigate(`/messages/${profile.id}`)}>
+          <Button variant="contained" color="primary" onClick={() => navigate('/messages')}>
             Message
           </Button>
         </Paper>

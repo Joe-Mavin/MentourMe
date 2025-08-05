@@ -128,14 +128,6 @@ function App() {
           }
         />
         <Route
-          path="/mentor-messages"
-          element={
-            <ProtectedRoute allowedRoles={['mentor']}>
-              <Messages />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/mentor-profile"
           element={
             <ProtectedRoute allowedRoles={['mentor']}>

@@ -15,12 +15,12 @@ API.interceptors.request.use((config) => {
 });
 
 export const sendMessage = (senderId, receiverId, content) =>
-  axios.post('/api/messages', { senderId, receiverId, content });
+  API.post('/api/messages', { senderId, receiverId, content });
 
 export const fetchMessagesForUser = (userId) =>
-  axios.get(`/api/messages/${userId}`);
+  API.get(`/api/messages/${userId}`);
 
 export const markMessageAsRead = (messageId) =>
-  axios.patch(`/api/messages/${messageId}/read`);
+  API.patch(`/api/messages/${messageId}/read`);
 
 export default API;

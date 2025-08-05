@@ -27,21 +27,7 @@ const Sidebar = () => {
   // Handle sidebar item clicks with client-side navigation
   const handleSidebarItemClick = (route) => {
     if (route) {
-      // Handle role-based routing
-      const userRole = localStorage.getItem('role');
-      if (userRole === 'mentor') {
-        // For mentors, use mentor-specific routes
-        if (route === '/messages') {
-          navigate('/mentor-messages');
-        } else if (route === '/profile') {
-          navigate('/mentor-profile');
-        } else {
-          navigate(route);
-        }
-      } else {
-        // For users, use regular routes
-        navigate(route);
-      }
+      navigate(route);
     }
   };
 
