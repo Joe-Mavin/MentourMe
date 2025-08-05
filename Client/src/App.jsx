@@ -15,6 +15,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from "./assets/theme";
 import UserProfile from './pages/UserProfile';
 import SuperMentorApprovalPanel from './pages/SuperMentorApprovalPanel';
+import Messages from "./pages/Messages";
 
 // ProtectedRoute checks for JWT, onboarding status, and user role
 function ProtectedRoute({ children, requireOnboarded, allowedRoles }) {
@@ -91,7 +92,7 @@ function App() {
           path="/messages"
           element={
             <ProtectedRoute allowedRoles={["user", "mentor", "therapist"]}>
-              <Dashboard />
+              <Messages />
             </ProtectedRoute>
           }
         />
@@ -132,7 +133,7 @@ function App() {
           path="/mentor-messages"
           element={
             <ProtectedRoute allowedRoles={['mentor']}>
-              <MentorDashboard />
+              <Messages />
             </ProtectedRoute>
           }
         />

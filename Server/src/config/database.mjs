@@ -21,4 +21,7 @@ const sequelize = new Sequelize(
 // // ⚠️ Only use this during initial dev:
 // sequelize.sync().then(() => console.log("Initial sync done ✅"));
 
+// // ⚠️ Uncomment to sync Message table (run once, then comment again):
+// sequelize.sync({ alter: true }).then(() => console.log("Message table synced ✅"));
+
 export default sequelize;

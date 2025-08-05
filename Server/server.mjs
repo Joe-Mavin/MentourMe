@@ -56,29 +56,8 @@ console.log("Loaded DB_NAME:", process.env.DB_NAME);
 // Sync database & start server
 const PORT = process.env.PORT || 5001;
 sequelize.sync({ force: false })
-  .then(async () => {
+  .then(() => {
     console.log("Database synced ✅");
-    
-    // Manually create Message table if it doesn't exist
-    try {
-      await sequelize.query(`
-        CREATE TABLE IF NOT EXISTS Messages (
-          id VARCHAR(36) PRIMARY KEY,
-          senderId VARCHAR(36) NOT NULL,
-          receiverId VARCHAR(36) NOT NULL,
-          content TEXT NOT NULL,
-          isRead BOOLEAN DEFAULT false,
-          createdAt DATETIME NOT NULL,
-          updatedAt DATETIME NOT NULL,
-          INDEX idx_sender (senderId),
-          INDEX idx_receiver (receiverId)
-        )
-      `);
-      console.log("Message table ready ✅");
-    } catch (err) {
-      console.log("Message table already exists or error:", err.message);
-    }
-    
     app.listen(PORT, "0.0.0.0", () => console.log(`Server running on all interfaces (0.0.0.0:${PORT})`));
   })
   .catch((err) => console.error("DB Connection Error ❌", err));
